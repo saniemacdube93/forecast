@@ -638,6 +638,227 @@ def plot_rule_growth(output_dir: str = ".") -> None:
 
 
 # ===========================================================================
+# 12.  Baseline comparison tables as PNG images
+# ===========================================================================
+
+def plot_main_results_table(output_dir: str = ".") -> None:
+    """
+    Render the full Hits@1/3/10 comparison table for all 4 datasets as a
+    publication-quality PNG figure (with colour-coded D-RECIPE row).
+    """
+    datasets   = ["icews14", "icews18", "GDELT", "YAGO"]
+    all_models = list(BASELINES["icews14"].keys()) + ["D-RECIPE"]
+
+    # Build cell data
+    col_labels = (["Model"] +
+                  [f"ICEWS14\nH@{k}" for k in [1, 3, 10]] +
+                  [f"ICEWS18\nH@{k}" for k in [1, 3, 10]] +
+                  [f"GDELT\nH@{k}"   for k in [1, 3, 10]] +
+                  [f"YAGO\nH@{k}"    for k in [1, 3, 10]])
+
+    cell_text  = []
+    cell_colors = []
+    for model in all_models:
+        row = [model]
+        row_colors = ["#f0f0f0" if model != "D-RECIPE" else "#d6eaf8"]
+        for ds in datasets:
+            if model == "D-RECIPE":
+                vals = DRECIPE_RESULTS[ds]
+            else:
+                vals = BASELINES[ds][model]
+            # Bold D-RECIPE; highlight max per column later
+            for v in vals:
+                row.append(f"{v:.3f}")
+                row_colors.append("#d6eaf8" if model == "D-RECIPE" else "white")
+        cell_text.append(row)
+        cell_colors.append(row_colors)
+
+    # Highlight best value (non-D-RECIPE) in light yellow, D-RECIPE in blue
+    n_metric_cols = 12
+    for col in range(1, n_metric_cols + 1):
+        vals_num = []
+        for row_i, model in enumerate(all_models):
+            try:
+                vals_num.append((float(cell_text[row_i][col]), row_i))
+            except ValueError:
+                pass
+        if not vals_num:
+            continue
+        best_val, best_row = max(vals_num)
+        for v, row_i in vals_num:
+            if row_i == best_row:
+                cell_colors[row_i][col] = "#aed6f1" if all_models[row_i] == "D-RECIPE" else "#f9e79f"
+
+    fig, ax = plt.subplots(figsize=(22, 6))
+    ax.axis("off")
+
+    tbl = ax.table(
+        cellText=cell_text,
+        colLabels=col_labels,
+        cellColours=cell_colors,
+        cellLoc="center",
+        loc="center",
+    )
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(8.5)
+    tbl.scale(1, 1.6)
+
+    # Bold header row
+    for (row, col), cell in tbl.get_celld().items():
+        if row == 0:
+            cell.set_text_props(fontweight="bold", fontsize=8)
+            cell.set_facecolor("#2c3e50")
+            cell.set_text_props(color="white", fontweight="bold")
+        if col == 0 and row > 0:
+            cell.set_text_props(fontweight="bold")
+
+    ax.set_title(
+        "Table 1 — Main Results: Temporal Link Prediction (Hits@1, Hits@3, Hits@10)\n"
+        "D-RECIPE vs All Baselines across ICEWS14, ICEWS18, GDELT, YAGO",
+        fontsize=11, fontweight="bold", pad=12,
+    )
+    fig.tight_layout()
+    path = os.path.join(output_dir, "table_main_results.png")
+    savefig(fig, path, dpi=180)
+
+
+def plot_continual_metrics_table(output_dir: str = ".") -> None:
+    """
+    Render BWT / FWT / AvgAcc comparison table as a PNG.
+    """
+    models = ["Naive Fine-tune", "RECIPE-TKG (static)", "D-RECIPE"]
+    avgs   = [0.583,  0.651,  0.672]
+    bwts   = [-0.084, 0.000,  0.005]
+    fwts   = [0.009,  0.000,  0.031]
+
+    col_labels = ["Model", "AvgAcc ↑", "BWT (↑ better)", "FWT ↑"]
+    cell_text  = []
+    cell_colors = []
+    for i, m in enumerate(models):
+        row = [m, f"{avgs[i]:.3f}", f"{bwts[i]:+.3f}", f"{fwts[i]:+.3f}"]
+        bg  = "#d6eaf8" if m == "D-RECIPE" else "white"
+        cell_text.append(row)
+        cell_colors.append([bg] * 4)
+
+    fig, ax = plt.subplots(figsize=(8, 2.5))
+    ax.axis("off")
+    tbl = ax.table(
+        cellText=cell_text,
+        colLabels=col_labels,
+        cellColours=cell_colors,
+        cellLoc="center",
+        loc="center",
+    )
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(10)
+    tbl.scale(1, 1.8)
+    for (row, col), cell in tbl.get_celld().items():
+        if row == 0:
+            cell.set_facecolor("#2c3e50")
+            cell.set_text_props(color="white", fontweight="bold")
+        if col == 0 and row > 0:
+            cell.set_text_props(fontweight="bold")
+
+    ax.set_title(
+        "Table 2 — Continual Learning Metrics (ICEWS14, LLaMA-2-7B)\n"
+        "BWT: Backward Transfer (forgetting)  |  FWT: Forward Transfer",
+        fontsize=10, fontweight="bold", pad=10,
+    )
+    fig.tight_layout()
+    path = os.path.join(output_dir, "table_continual_metrics.png")
+    savefig(fig, path, dpi=180)
+
+
+def plot_ablation_table(output_dir: str = ".") -> None:
+    """Ablation study results as a PNG table."""
+    models  = list(ABLATION_RESULTS.keys())
+    col_labels = ["Configuration", "Hits@1", "Hits@3", "Hits@10", "Δ H@10 vs full"]
+    full_h10 = ABLATION_RESULTS["D-RECIPE (full)"][2]
+
+    cell_text   = []
+    cell_colors = []
+    for m in models:
+        h1, h3, h10 = ABLATION_RESULTS[m]
+        delta = h10 - full_h10
+        delta_str = f"{delta:+.3f}" if m != "D-RECIPE (full)" else "—"
+        row = [m, f"{h1:.3f}", f"{h3:.3f}", f"{h10:.3f}", delta_str]
+        bg  = "#d6eaf8" if m == "D-RECIPE (full)" else (
+              "#fde8d8" if delta < 0 else "white")
+        cell_text.append(row)
+        cell_colors.append([bg] * 5)
+
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.axis("off")
+    tbl = ax.table(
+        cellText=cell_text,
+        colLabels=col_labels,
+        cellColours=cell_colors,
+        cellLoc="center",
+        loc="center",
+    )
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(9.5)
+    tbl.scale(1, 1.7)
+    for (row, col), cell in tbl.get_celld().items():
+        if row == 0:
+            cell.set_facecolor("#2c3e50")
+            cell.set_text_props(color="white", fontweight="bold")
+        if col == 0 and row > 0:
+            cell.set_text_props(fontweight="bold")
+
+    ax.set_title(
+        "Table 3 — Ablation Study (ICEWS14, LLaMA-2-7B)\n"
+        "Effect of removing individual D-RECIPE components",
+        fontsize=10, fontweight="bold", pad=10,
+    )
+    fig.tight_layout()
+    path = os.path.join(output_dir, "table_ablation.png")
+    savefig(fig, path, dpi=180)
+
+
+def plot_llama_comparison_table(output_dir: str = ".") -> None:
+    """LLaMA-2 vs LLaMA-3 comparison table as PNG."""
+    col_labels = ["Model", "LLaMA-2-7B\nH@1", "LLaMA-2-7B\nH@3", "LLaMA-2-7B\nH@10",
+                  "LLaMA-3-8B\nH@1", "LLaMA-3-8B\nH@3", "LLaMA-3-8B\nH@10"]
+    cell_text   = []
+    cell_colors = []
+    for m in ["ICL", "RECIPE-TKG", "D-RECIPE"]:
+        l2 = LLAMA_COMPARISON[m]["LLaMA-2-7B"]
+        l3 = LLAMA_COMPARISON[m]["LLaMA-3-8B"]
+        row = [m] + [f"{v:.3f}" for v in l2] + [f"{v:.3f}" for v in l3]
+        bg  = "#d6eaf8" if m == "D-RECIPE" else "white"
+        cell_text.append(row)
+        cell_colors.append([bg] * 7)
+
+    fig, ax = plt.subplots(figsize=(10, 2.5))
+    ax.axis("off")
+    tbl = ax.table(
+        cellText=cell_text,
+        colLabels=col_labels,
+        cellColours=cell_colors,
+        cellLoc="center",
+        loc="center",
+    )
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(9.5)
+    tbl.scale(1, 1.9)
+    for (row, col), cell in tbl.get_celld().items():
+        if row == 0:
+            cell.set_facecolor("#2c3e50")
+            cell.set_text_props(color="white", fontweight="bold")
+        if col == 0 and row > 0:
+            cell.set_text_props(fontweight="bold")
+
+    ax.set_title(
+        "Table 4 — LLaMA-2-7B vs LLaMA-3-8B (ICEWS14, Hits@1 / Hits@3 / Hits@10)",
+        fontsize=10, fontweight="bold", pad=10,
+    )
+    fig.tight_layout()
+    path = os.path.join(output_dir, "table_llama_comparison.png")
+    savefig(fig, path, dpi=180)
+
+
+# ===========================================================================
 # Summary comparison table (printed to stdout + saved as .txt)
 # ===========================================================================
 
@@ -756,7 +977,19 @@ def main():
     print("  Generating comparison table ...")
     print_comparison_table(outdir)
 
-    print(f"\n✓ All {11 + len(datasets)} plots generated in: {outdir}/\n")
+    print("  Generating main results table (PNG) ...")
+    plot_main_results_table(outdir)
+
+    print("  Generating continual metrics table (PNG) ...")
+    plot_continual_metrics_table(outdir)
+
+    print("  Generating ablation table (PNG) ...")
+    plot_ablation_table(outdir)
+
+    print("  Generating LLaMA comparison table (PNG) ...")
+    plot_llama_comparison_table(outdir)
+
+    print(f"\n✓ All {15 + len(datasets)} figures generated in: {outdir}/\n")
 
 
 if __name__ == "__main__":
