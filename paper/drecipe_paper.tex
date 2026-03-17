@@ -1,5 +1,5 @@
 %==========================================================================
-% D-RECIPE: Dynamic Continual Learning for Temporal Knowledge Graph
+% Stellar: Dynamic Continual Learning for Temporal Knowledge Graph
 %           Forecasting with Incremental Rule Mining and LLM Adaptation
 %
 % Authors: Busisani Mac Dube, Jean Vincent Fonou Dombeu
@@ -62,7 +62,7 @@
 %----------------------------------------------------------------------
 % Custom commands
 %----------------------------------------------------------------------
-\newcommand{\drecipe}{\textsc{D-Recipe}}
+\newcommand{\drecipe}{\textsc{Stellar}}
 \newcommand{\recipe}{\textsc{Recipe-TKG}}
 \newcommand{\bfx}{\mathbf{x}}
 \newcommand{\bfh}{\mathbf{h}}
@@ -79,7 +79,7 @@
 % Metadata
 %----------------------------------------------------------------------
 \hypersetup{
-  pdftitle={D-RECIPE: Dynamic Continual Learning for Temporal Knowledge Graph Forecasting},
+  pdftitle={Stellar: Dynamic Continual Learning for Temporal Knowledge Graph Forecasting},
   pdfauthor={Busisani Mac Dube, Jean Vincent Fonou Dombeu},
   colorlinks=true,
   linkcolor=drecipeblue,
@@ -95,15 +95,15 @@
 %----------------------------------------------------------------------
 \title{%
   \large\bfseries
-  D-RECIPE: Dynamic Continual Learning for\\
+  Stellar: Dynamic Continual Learning for\\
   Temporal Knowledge Graph Forecasting via\\
   Incremental Rule Mining and LLM Adaptation%
 }
 
 \author{
   Busisani Mac Dube\textsuperscript{1} \quad Jean Vincent Fonou Dombeu\textsuperscript{1}\\[4pt]
-  \textsuperscript{1}Department of Computer Science, North-West University, South Africa\\[2pt]
-  \small\texttt{\{busisani.macdube, jvfonou\}@nwu.ac.za}
+  \textsuperscript{1}Department of Computer Science, University of KwaZulu-Natal, South Africa\\[2pt]
+  \small\texttt{\{b.macdube, jvfonou\}@ukzn.ac.za}
 }
 
 \date{\small Draft — \today{} \quad [\,arXiv pre-print\,]}
@@ -128,11 +128,11 @@ they require full re-training and full rule re-mining when the graph changes,
 making them fundamentally incompatible with real-world deployment scenarios
 where edges arrive continuously as a stream.
 
-We introduce \drecipe{} (\textbf{D}ynamic \textbf{R}ule-bas\textbf{E}d
+We introduce \textsc{Stellar} (\textbf{D}ynamic \textbf{R}ule-bas\textbf{E}d
 \textbf{C}ont\textbf{I}nual \textbf{P}r\textbf{E}dictor), the first
 LLM-based continual TKG completion framework that handles streaming edge
 ingestion without offline reprocessing.
-\drecipe{} extends \recipe{} with five novel components:
+\textsc{Stellar} extends \recipe{} with five novel components:
 (1)~an \emph{incremental rule miner} that updates temporal rules in $O(k)$
 per new edge without full re-mining;
 (2)~an \emph{edge stream processor} with $O(1)$ adjacency updates and
@@ -144,7 +144,7 @@ prevent catastrophic forgetting;
 hop-cache invalidation; and
 (5)~full Apple M-series (MPS) hardware compatibility.
 Evaluated across four standard TKG benchmarks (ICEWS14, ICEWS18, GDELT,
-YAGO), \drecipe{} achieves Hits@10 of 0.681, 0.543, 0.349, and 0.945,
+YAGO), \textsc{Stellar} achieves Hits@10 of 0.681, 0.543, 0.349, and 0.945,
 surpassing \recipe{} by up to $+8.4\%$ in the streaming setting.
 Continual learning metrics confirm near-zero backward transfer
 (BWT~$=+0.005$, ICEWS14), demonstrating that temporal knowledge is preserved
@@ -186,10 +186,10 @@ Full TLogic rule mining~\citep{Liu2022tlogic} on ICEWS14 takes $\approx$8
 minutes per update; full fine-tuning of a 7B-parameter LLM takes hours.
 
 \medskip
-\noindent\textbf{This paper} closes the gap with \drecipe{}: a framework that
+\noindent\textbf{This paper} closes the gap with \textsc{Stellar}: a framework that
 makes LLM-based TKG forecasting compatible with streaming graphs via
 principled continual learning.
-\drecipe{} is built on \recipe{}~\citep{Akgul2025recipe} and retains all of
+\textsc{Stellar} is built on \recipe{}~\citep{Akgul2025recipe} and retains all of
 its inductive components while adding the machinery needed for
 streaming operation.
 
@@ -323,11 +323,11 @@ BWT~$\approx 0$ (no forgetting); BWT~$< 0$ (catastrophic forgetting);
 FWT~$> 0$ (positive forward transfer).
 
 %==========================================================================
-\section{D-RECIPE Architecture}
+\section{Stellar Architecture}
 \label{sec:method}
 %==========================================================================
 
-\Cref{fig:arch} illustrates the full \drecipe{} pipeline.
+\Cref{fig:arch} illustrates the full \textsc{Stellar} pipeline.
 At each streaming step, incoming edges $\{(s,r,o,t)\}$ flow through five
 sequential components before being used to update the LLM-based predictor.
 
@@ -418,7 +418,7 @@ sequential components before being used to update the LLM-based predictor.
 
 \end{tikzpicture}
 \caption{%
-  \textbf{\drecipe{} Architecture.}
+  \textbf{\textsc{Stellar} Architecture.}
   Edges arrive as a stream and are ingested by the \emph{Stream Processor}
   in $O(1)$ time.  The \emph{Incremental Rule Miner} updates temporal rule
   confidences in $O(k)$ per edge.  The \emph{Adaptive RBMH Sampler} selects
@@ -500,7 +500,7 @@ where:
               &\text{(co-occurrence)}
 \end{align}
 \paragraph{Adaptive extension.}
-\drecipe{} maintains a hop-distance cache $D[s]$ that is \emph{selectively
+\textsc{Stellar} maintains a hop-distance cache $D[s]$ that is \emph{selectively
 invalidated}: when edge $(s, r, o, t)$ arrives, only entities within
 $k_{\max}$ hops of $s$ or $o$ are marked stale.
 This reduces recomputation from $O(|\calE|^2)$ to $O(\text{deg}^{k_{\max}})$
@@ -644,7 +644,7 @@ For continual evaluation we additionally report \textbf{BWT},
 \subsection{Implementation Details}
 \label{sec:impl}
 
-\drecipe{} uses LoRA ($r{=}8$, $\alpha{=}16$, dropout $0.05$) applied to the
+\textsc{Stellar} uses LoRA ($r{=}8$, $\alpha{=}16$, dropout $0.05$) applied to the
 \texttt{q\_proj} and \texttt{v\_proj} layers of both LLaMA-2-7B
 and LLaMA-3-8B.
 Training uses AdamW ($\text{lr}=3{\times}10^{-4}$,
@@ -666,7 +666,7 @@ $\tau_d{=}2.0$, $\lambda{=}0.1$, $\rho{=}0.3$, $C{=}5{,}000$.
 \subsection{Main Results}
 
 \Cref{tab:main} reports Hits@1/3/10 for all models on all four datasets.
-\drecipe{} surpasses \recipe{} on every dataset and metric, with the largest
+\textsc{Stellar} surpasses \recipe{} on every dataset and metric, with the largest
 improvements on GDELT (+8.4\% Hits@1) and ICEWS18 (+6.7\% Hits@1), which
 exhibit higher novelty rates in the streaming setting.
 
@@ -677,7 +677,7 @@ exhibit higher novelty rates in the streaming setting.
   filtered setting).
   Baseline numbers are from~\protect\citet{Akgul2025recipe}, Table~2.
   Best result per column in \textbf{bold}.
-  \drecipe{} is evaluated in the streaming setting; all baselines use static
+  \textsc{Stellar} is evaluated in the streaming setting; all baselines use static
   (offline) processing.
 }
 \label{tab:main}
@@ -705,7 +705,7 @@ ICL           & .344 & .464 & .523 & .164 & .302 & .382 & .090 & .172 & .242 & .
 GenTKG        & .364 & .476 & .532 & .200 & .329 & .395 & .099 & .193 & .280 & .746 & .804 & .821 \\
 \recipe{}     & .393 & .526 & .651 & .224 & .369 & .516 & .095 & .192 & .327 & .811 & .880 & .930 \\
 \midrule
-\textbf{\drecipe{}} (ours)
+\textbf{\textsc{Stellar}} (ours)
               & \textbf{.412} & \textbf{.548} & \textbf{.681}
               & \textbf{.239} & \textbf{.386} & \textbf{.543}
               & \textbf{.103} & \textbf{.207} & \textbf{.349}
@@ -722,7 +722,7 @@ $\Delta$ vs \recipe{}
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/bar_hits_icews14.png}
-\caption{Hits@1/3/10 on ICEWS14 — \drecipe{} vs.\ all baselines.}
+\caption{Hits@1/3/10 on ICEWS14 — \textsc{Stellar} vs.\ all baselines.}
 \label{fig:bar_icews14}
 \end{figure}
 
@@ -736,7 +736,7 @@ $\Delta$ vs \recipe{}
 \subsection{Continual Learning Metrics}
 
 \Cref{tab:cl} reports BWT, FWT, and AvgAcc on ICEWS14.
-\drecipe{} achieves BWT~$= +0.005$ (essentially zero forgetting) and
+\textsc{Stellar} achieves BWT~$= +0.005$ (essentially zero forgetting) and
 FWT~$= +0.031$ (positive forward transfer).
 In contrast, naive fine-tuning suffers severe forgetting
 (BWT~$= -0.084$), confirming the necessity of the EWC + KD + Replay
@@ -753,7 +753,7 @@ combination.
 \midrule
 Naive Fine-tune        & 0.583 & $-$0.084 & $+$0.009 \\
 \recipe{} (static)     & 0.651 &  0.000   &  0.000   \\
-\textbf{\drecipe{}}    & \textbf{0.672} & $\mathbf{+0.005}$ & $\mathbf{+0.031}$ \\
+\textbf{\textsc{Stellar}}    & \textbf{0.672} & $\mathbf{+0.005}$ & $\mathbf{+0.031}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -763,7 +763,7 @@ Naive Fine-tune        & 0.583 & $-$0.084 & $+$0.009 \\
 \includegraphics[width=\columnwidth]{../results/plots/hits_over_time.png}
 \caption{%
   Hits@10 over stream chunks (ICEWS14).
-  \drecipe{} maintains and improves performance; Naive Fine-tune degrades.
+  \textsc{Stellar} maintains and improves performance; Naive Fine-tune degrades.
 }
 \label{fig:over_time}
 \end{figure}
@@ -771,7 +771,7 @@ Naive Fine-tune        & 0.583 & $-$0.084 & $+$0.009 \\
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/bwt_fwt_comparison.png}
-\caption{BWT and FWT comparison. Positive BWT in \drecipe{} indicates that
+\caption{BWT and FWT comparison. Positive BWT in \textsc{Stellar} indicates that
          past periods benefit from continual updates.}
 \label{fig:bwt_fwt}
 \end{figure}
@@ -780,9 +780,9 @@ Naive Fine-tune        & 0.583 & $-$0.084 & $+$0.009 \\
 
 \Cref{tab:llama} compares backbone LLMs on ICEWS14.
 LLaMA-3-8B yields a small but consistent improvement ($+0.7\%$ Hits@10)
-over LLaMA-2-7B for \drecipe{}, consistent with findings in~\citet{Akgul2025recipe}.
+over LLaMA-2-7B for \textsc{Stellar}, consistent with findings in~\citet{Akgul2025recipe}.
 Notably, \recipe{} does not benefit as reliably from LLaMA-3 (slight drop on
-H@1), suggesting that the \drecipe{} continual learning framework better
+H@1), suggesting that the \textsc{Stellar} continual learning framework better
 exploits the stronger backbone.
 
 \begin{table}[h!]
@@ -799,7 +799,7 @@ exploits the stronger backbone.
 \midrule
 ICL          & .344 & .464 & .523 & .351 & .484 & .578 \\
 \recipe{}    & .393 & .526 & .651 & .367 & .529 & .658 \\
-\drecipe{}   & .412 & .548 & .681 & .419 & .553 & .689 \\
+\textsc{Stellar}   & .412 & .548 & .681 & .419 & .553 & .689 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -807,7 +807,7 @@ ICL          & .344 & .464 & .523 & .351 & .484 & .578 \\
 \subsection{Stream Performance and Scalability}
 
 \Cref{fig:stream_perf} shows Hits@10 as the graph grows.
-\drecipe{} outperforms both Naive Fine-tune and the static \recipe{}
+\textsc{Stellar} outperforms both Naive Fine-tune and the static \recipe{}
 checkpoint after approximately 1,500 ingested entities, demonstrating
 that continual learning gains are consistent as the stream extends.
 
@@ -823,7 +823,7 @@ that continual learning gains are consistent as the stream extends.
 \includegraphics[width=\columnwidth]{../results/plots/rule_growth.png}
 \caption{%
   Rule growth and mining time.
-  Incremental mining (D-RECIPE) has near-constant cost vs.\
+  Incremental mining (Stellar) has near-constant cost vs.\
   full re-mining (RECIPE-TKG), which grows linearly with stream length.
 }
 \label{fig:rules}
@@ -834,7 +834,7 @@ that continual learning gains are consistent as the stream extends.
 \label{sec:ablation}
 %==========================================================================
 
-We ablate each component of \drecipe{} on ICEWS14 with LLaMA-2-7B.
+We ablate each component of \textsc{Stellar} on ICEWS14 with LLaMA-2-7B.
 \Cref{tab:ablation} summarises results; \cref{fig:ablation} provides a
 grouped bar chart.
 
@@ -848,7 +848,7 @@ grouped bar chart.
 \textbf{Configuration} & \textbf{H@1} & \textbf{H@3} & \textbf{H@10}
                        & \textbf{$\Delta$H@10}\\
 \midrule
-\drecipe{} (full)      & .412 & .548 & .681 & — \\
+\textsc{Stellar} (full)      & .412 & .548 & .681 & — \\
 \quad w/o EWC          & .398 & .531 & .659 & $-$0.022 \\
 \quad w/o Replay       & .388 & .519 & .643 & $-$0.038 \\
 \quad w/o KD           & .401 & .535 & .662 & $-$0.019 \\
@@ -872,7 +872,7 @@ The largest single-component degradation is from removing experience replay
 EWC and KD provide complementary benefits; together they account for
 $-$0.041 H@10 (approximately half the gain over Naive Fine-tune).
 Naive fine-tuning without any CL component drops to 0.611, 7.0 points below
-the full \drecipe{}, confirming the importance of the continual learning
+the full \textsc{Stellar}, confirming the importance of the continual learning
 framework.
 
 %==========================================================================
@@ -911,7 +911,7 @@ $\delta_F=5$ chunks.
 
 \paragraph{Synthetic data fallback.}
 When real benchmark datasets are unavailable (e.g., network restrictions),
-\drecipe{} falls back to synthetically generated data.
+\textsc{Stellar} falls back to synthetically generated data.
 Reported results use the real ICEWS/GDELT/YAGO benchmarks; we include the
 synthetic fallback only for reproducibility under constrained environments.
 
@@ -944,11 +944,11 @@ open research direction.
 \label{sec:conclusion}
 %==========================================================================
 
-We have presented \drecipe{}, the first LLM-based continual TKG forecasting
+We have presented \textsc{Stellar}, the first LLM-based continual TKG forecasting
 framework compatible with streaming graph ingestion.
 By combining incremental rule mining ($O(k)$ per edge), adaptive RBMH
 sampling, and a multi-objective continual learning loss (EWC + KD + Replay),
-\drecipe{} surpasses the static state-of-the-art \recipe{} model by up to
+\textsc{Stellar} surpasses the static state-of-the-art \recipe{} model by up to
 8.4\% Hits@1 in the streaming setting, while maintaining near-zero backward
 transfer (BWT~$= +0.005$ on ICEWS14), demonstrating that temporal knowledge
 is preserved as the graph evolves.
@@ -959,7 +959,7 @@ reproducibility.
 
 As~\citet{MacDube2023review} observe, the dynamic nature of knowledge is one
 of the central challenges for knowledge graph systems.
-We believe \drecipe{} represents a meaningful step towards TKG forecasting
+We believe \textsc{Stellar} represents a meaningful step towards TKG forecasting
 systems that can operate in the real-world open-world, continuously-evolving
 setting.
 
@@ -971,7 +971,7 @@ setting.
 We thank the authors of RECIPE-TKG~\citep{Akgul2025recipe} for releasing
 their code and benchmark data, and the authors of GenTKG~\citep{Liao2024gentkg}
 for providing baseline implementation references.
-This work was supported by the Department of Computer Science, North-West
+This work was supported by the Department of Computer Science, University of KwaZulu-Natal,
 University, South Africa.
 
 %==========================================================================
