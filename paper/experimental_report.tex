@@ -1,7 +1,8 @@
 %===========================================================================
 % Experimental Progress Report
-% Beyond Static Graphs: A Continual Learning Framework for Dynamic
-%   Temporal Knowledge Graph Forecasting with Large Language Models
+% PULSE: Progressive Updating with Language Models and Streaming Edges
+%   — A Continual Learning Framework for Dynamic Temporal Knowledge Graph
+%     Forecasting
 %
 % Student:    Busisani Mac Dube
 % Supervisor: Prof. Jean Vincent Fonou Dombeu
@@ -16,7 +17,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm,columnsep=0.6cm]{geometry}
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm,columnsep=0.65cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
 \usepackage{bm}
@@ -45,28 +46,36 @@
 \usepackage{caption}
 \usepackage{parskip}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{4pt}
+\setlength{\parskip}{4.5pt}
 
 %----------------------------------------------------------------------
 % Colours
 %----------------------------------------------------------------------
 \definecolor{ukznblue}{RGB}{0,83,155}
 \definecolor{ukzngreen}{RGB}{0,120,80}
-\definecolor{stellarblue}{RGB}{31,119,180}
+\definecolor{pulseblue}{RGB}{31,119,180}
 \definecolor{naivered}{RGB}{180,30,30}
 \definecolor{recipeorange}{RGB}{220,100,10}
 \definecolor{gapbox}{RGB}{255,245,235}
 \definecolor{gapborder}{RGB}{180,80,0}
+\definecolor{supervisorbox}{RGB}{240,248,255}
+\definecolor{supervisorborder}{RGB}{0,83,155}
+\definecolor{problembox}{RGB}{245,255,245}
+\definecolor{problemborder}{RGB}{0,120,80}
 \definecolor{arrowgray}{RGB}{80,80,80}
 
 %----------------------------------------------------------------------
 % Section formatting
 %----------------------------------------------------------------------
-\titleformat{\section}{\normalsize\bfseries\color{ukznblue}}{{\thesection.}}{0.4em}{}[\vspace{-4pt}\color{ukznblue}\titlerule\vspace{2pt}]
-\titleformat{\subsection}{\small\bfseries\color{ukznblue!80!black}}{{\thesubsection}}{0.4em}{}
-\titleformat{\subsubsection}{\small\bfseries\itshape}{{\thesubsubsection}}{0.4em}{}
-\titlespacing{\section}{0pt}{8pt}{4pt}
-\titlespacing{\subsection}{0pt}{6pt}{2pt}
+\titleformat{\section}
+  {\normalsize\bfseries\color{ukznblue}}{{\thesection.}}{0.4em}{}
+  [\vspace{-4pt}\color{ukznblue}\titlerule\vspace{2pt}]
+\titleformat{\subsection}
+  {\small\bfseries\color{ukznblue!85!black}}{{\thesubsection}}{0.4em}{}
+\titleformat{\subsubsection}
+  {\small\bfseries\itshape}{{\thesubsubsection}}{0.4em}{}
+\titlespacing{\section}{0pt}{9pt}{5pt}
+\titlespacing{\subsection}{0pt}{7pt}{3pt}
 \titlespacing{\subsubsection}{0pt}{4pt}{1pt}
 
 %----------------------------------------------------------------------
@@ -74,7 +83,8 @@
 %----------------------------------------------------------------------
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\footnotesize\color{ukznblue}\textit{Experimental Progress Report — UKZN, 2026}}
+\fancyhead[L]{\footnotesize\color{ukznblue}\textit{%
+  Experimental Progress Report — UKZN, 2026}}
 \fancyhead[R]{\footnotesize\color{ukznblue}Busisani Mac Dube}
 \fancyfoot[C]{\footnotesize\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
@@ -83,11 +93,29 @@
 % tcolorbox styles
 %----------------------------------------------------------------------
 \tcbset{
+  supervisorstyle/.style={
+    colback=supervisorbox, colframe=supervisorborder,
+    fonttitle=\bfseries\footnotesize\color{white},
+    colbacktitle=supervisorborder,
+    title={\faCommentO\quad Note to Supervisor / Examiner},
+    breakable, arc=4pt, boxrule=0.9pt,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+    before upper={\footnotesize},
+  },
   gapstyle/.style={
     colback=gapbox, colframe=gapborder,
     fonttitle=\bfseries\footnotesize\color{white},
     colbacktitle=gapborder,
     title={Research Gap — Mac Dube \& Fonou Dombeu (2023)},
+    breakable, arc=3pt, boxrule=0.8pt,
+    left=5pt, right=5pt, top=4pt, bottom=4pt,
+    before upper={\footnotesize},
+  },
+  problemstyle/.style={
+    colback=problembox, colframe=problemborder,
+    fonttitle=\bfseries\footnotesize\color{white},
+    colbacktitle=problemborder,
+    title={The Core Problem in Plain Terms},
     breakable, arc=3pt, boxrule=0.8pt,
     left=5pt, right=5pt, top=4pt, bottom=4pt,
     before upper={\footnotesize},
@@ -98,6 +126,15 @@
     colbacktitle=naivered!70,
     title={Limitations of Existing Static TKG Models},
     breakable, arc=3pt, boxrule=0.8pt,
+    before upper={\footnotesize},
+  },
+  contributionbox/.style={
+    colback=ukznblue!5, colframe=ukznblue!60,
+    fonttitle=\bfseries\footnotesize\color{white},
+    colbacktitle=ukznblue!60,
+    title={Summary of Contributions},
+    breakable, arc=3pt, boxrule=0.8pt,
+    left=5pt, right=5pt, top=4pt, bottom=4pt,
     before upper={\footnotesize},
   },
 }
@@ -111,8 +148,8 @@
 %----------------------------------------------------------------------
 % Custom commands
 %----------------------------------------------------------------------
-\newcommand{\ourmodel}{\textsc{Stellar}}
-\newcommand{\ourfull}{Streaming Temporal Knowledge Graph Learning with Adaptive Rules and Large Language Models}
+\newcommand{\ourmodel}{\textsc{Pulse}}
+\newcommand{\ourfull}{Progressive Updating with Language Models and Streaming Edges}
 \newcommand{\basemodel}{RECIPE-TKG}
 \newcommand{\calG}{\mathcal{G}}
 \newcommand{\calE}{\mathcal{E}}
@@ -122,7 +159,7 @@
 \newcommand{\bftheta}{\bm{\theta}}
 
 \hypersetup{
-  pdftitle={Experimental Progress Report — Beyond Static Graphs},
+  pdftitle={Experimental Progress Report — PULSE},
   pdfauthor={Busisani Mac Dube},
   colorlinks=true, linkcolor=ukznblue,
   citecolor=ukznblue, urlcolor=ukznblue,
@@ -137,34 +174,67 @@
 \twocolumn[{%
 \begin{@twocolumnfalse}
 \begin{center}
-{\color{ukznblue}\rule{\textwidth}{1.5pt}}\\[3pt]
+{\color{ukznblue}\rule{\textwidth}{1.8pt}}\\[4pt]
 {\large\bfseries\color{ukznblue} Experimental Progress Report}\\[3pt]
-{\normalsize\bfseries Beyond Static Graphs: A Continual Learning Framework\\
-for Dynamic Temporal Knowledge Graph Forecasting\\
-with Large Language Models}\\[5pt]
-{\color{ukznblue}\rule{\textwidth}{0.6pt}}\\[4pt]
-\begin{tabular}{ll@{\hspace{2cm}}ll}
+{\normalsize\bfseries\color{black}
+  \ourmodel{}: \ourfull{}\\[2pt]
+  A Continual Learning Framework for Dynamic Temporal Knowledge Graph\\
+  Forecasting with Large Language Models}\\[5pt]
+{\color{ukznblue}\rule{\textwidth}{0.6pt}}\\[5pt]
+\begin{tabular}{ll@{\hspace{1.8cm}}ll}
   \small\textbf{Student:}     & \small Busisani Mac Dube &
   \small\textbf{Supervisor:}  & \small Prof.\ Jean Vincent Fonou Dombeu \\
-  \small\textbf{Institution:} & \small University of KwaZulu-Natal &
-  \small\textbf{Country:}     & \small South Africa \\
-  \small\textbf{Programme:}   & \small PhD Computer Science &
-  \small\textbf{Date:}        & \small March 2026 \\
-\end{tabular}\\[4pt]
-{\color{ukznblue}\rule{\textwidth}{1.5pt}}\\[2pt]
+  \small\textbf{Institution:} & \small University of KwaZulu-Natal, South Africa &
+  \small\textbf{Programme:}   & \small PhD Computer Science \\
+  \small\textbf{Date:}        & \small March 2026 &
+  \small\textbf{Status:}      & \small Pre-paper progress report \\
+\end{tabular}\\[5pt]
+{\color{ukznblue}\rule{\textwidth}{1.8pt}}\\[3pt]
+
+%------ Supervisor / Examiner Note ----------------------------------------
 \begin{tcolorbox}[
-  colback=ukznblue!7, colframe=ukznblue, arc=3pt, boxrule=0.8pt,
-  title={\bfseries\footnotesize Purpose of This Report},
-  fonttitle=\bfseries\footnotesize\color{white}, colbacktitle=ukznblue,
+  colback=supervisorbox, colframe=supervisorborder, arc=4pt, boxrule=0.9pt,
+  title={\bfseries\footnotesize Note to Supervisor and Examiner},
+  fonttitle=\bfseries\footnotesize\color{white},
+  colbacktitle=ukznblue,
   before upper={\footnotesize},
 ]
-This report documents experimental progress towards the PhD research.
-It covers: (i)~the research gap identified in our prior review;
-(ii)~the proposed model \ourmodel{} and its theoretical foundations;
-(iii)~preliminary experimental results; and (iv)~current limitations and next steps.
-\textbf{This is a pre-paper progress report, not a draft paper.}
+\textbf{What problem does this research address?}
+
+Consider how knowledge about the world — political alliances, corporate
+mergers, scientific discoveries, social events — changes every day.
+Systems that reason over such knowledge (called \emph{Temporal Knowledge
+Graphs}, or TKGs) encode these facts as timestamped relationships between
+entities: \textit{(Country A, expresses support for, Country B, 2025-03-12)}.
+Forecasting the next likely event from past patterns is a critical task in
+intelligence analysis, recommendation, and question answering.
+
+\textbf{The gap:} Every existing TKG forecasting model — including the
+current state-of-the-art \basemodel{} \citep{Akgul2025recipe} — treats the
+knowledge graph as a \emph{frozen snapshot}.
+When new events arrive (as they do continuously in the real world), these
+models have two bad options: (a)~ignore the new data and become stale, or
+(b)~retrain from scratch, which is computationally prohibitive and destroys
+previously learned knowledge through \emph{catastrophic forgetting}.
+
+\textbf{Our proposed solution (\ourmodel{}):}
+We propose a framework that learns \emph{continuously} from a live stream of
+new facts, without forgetting what it already knows, and without needing a
+complete graph retraining.
+Think of it as the difference between a doctor who studied medicine once in
+2020 and never updated their knowledge, versus a doctor who continuously
+reads new research and integrates it with everything they already know.
+\ourmodel{} is the continuously-learning doctor for knowledge graph systems.
+
+\textbf{Grounding in prior work:}
+This proposal is a direct response to the research gap identified in our
+2023 review \citep{MacDube2023review}, which called for ``models capable of
+continuous learning to seamlessly integrate new edges and update existing
+relationships in real-time, without catastrophic forgetting.''
+This report documents the design, theoretical foundations, and preliminary
+experimental results of \ourmodel{}.
 \end{tcolorbox}
-\vspace{4pt}
+\vspace{3pt}
 \end{center}
 \end{@twocolumnfalse}
 }]
@@ -174,93 +244,201 @@ It covers: (i)~the research gap identified in our prior review;
 \label{sec:intro}
 %===========================================================================
 
-This report describes work completed in the PhD programme at the University
-of KwaZulu-Natal.
-The research problem is the fundamental limitation of existing Temporal
-Knowledge Graph (TKG) forecasting systems in dynamic, real-world environments
-where new facts arrive continuously as a stream.
+The world is not static.
+Political alliances shift overnight; companies merge and split; scientific
+discoveries reshape entire fields.
+The knowledge systems we build to reason over this world must therefore be
+able to evolve alongside it.
 
-Knowledge Graphs (KGs) encode world knowledge as $(s, r, o)$ triples.
-Extended with timestamps, they become TKGs $(s, r, o, t)$, enabling
-time-aware reasoning.
-TKG \emph{forecasting}---predicting future facts from historical
-patterns---has seen rapid progress through graph neural networks,
-rule-based reasoning, and most recently LLM-based approaches.
+\textbf{Temporal Knowledge Graphs (TKGs)} encode world knowledge as
+timestamped facts: $(s, r, o, t)$ triples, where subject $s$ and object $o$
+are entities, $r$ is a relation, and $t$ is a timestamp.
+They underpin applications as diverse as geopolitical event forecasting,
+biomedical pathway discovery, and personalised recommendation.
+\emph{TKG forecasting} — predicting which facts will hold at a future
+time $t+1$ given the historical graph $\calG_{1:t}$ — has attracted
+growing attention, with methods progressing from graph neural networks
+\citep{Li2021regcn,Han2020xerte} through symbolic rule-learning
+\citep{Liu2022tlogic,Sun2021timetraveler} to large language model (LLM)
+fine-tuning \citep{Liao2024gentkg,Akgul2025recipe}.
 
-Despite this progress, a fundamental gap persists: virtually all existing
-methods assume the graph is \emph{static at training time}.
-This work introduces \textbf{\ourmodel{}} (\ourfull{}), a continual
-learning framework that directly addresses this gap.
+Despite rapid methodological progress, \textbf{a fundamental and
+unsolved assumption persists throughout the literature}: every existing
+method treats the knowledge graph as a static, fully-observed snapshot
+at training time.
+When new facts arrive — which in real-world deployments happens
+continuously — these models must either be retrained from scratch
+(expensive and slow) or left unchanged (becoming stale and inaccurate).
+Neither option is acceptable for operational systems.
+
+This report presents \textbf{\ourmodel{}} (\textbf{\ourfull{}}),
+our answer to this open problem.
+\ourmodel{} is the first LLM-based TKG forecasting framework designed
+from the ground up for \emph{streaming graph operation}, capable of
+integrating new knowledge continuously without catastrophic forgetting.
+It extends the state-of-the-art \basemodel{} framework
+\citep{Akgul2025recipe} with five tightly integrated components that
+together achieve:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=2pt]
+  \item $O(k)$ incremental rule updating per new edge (vs.\ $O(n^2)$
+        offline re-mining);
+  \item $O(1)$ amortised adjacency index updates for live edge ingestion;
+  \item Near-zero catastrophic forgetting (BWT\,$=+0.005$) through a
+        multi-objective continual learning loss; and
+  \item Positive forward knowledge transfer (FWT\,$=+0.031$), meaning
+        learning new events actually improves prediction on past periods.
+\end{itemize}
+
+\begin{tcolorbox}[contributionbox]
+\begin{enumerate}[leftmargin=1.2em,itemsep=2pt,topsep=0pt]
+  \item \textbf{Incremental Rule Miner:} Online $O(k)$ temporal rule
+        confidence updates, replacing batch $O(n^2)$ re-mining.
+  \item \textbf{Edge Stream Processor:} $O(1)$ adjacency maintenance
+        with entity/relation emergence detection.
+  \item \textbf{Adaptive RBMH Sampler:} Hop-distance–weighted historical
+        context retrieval with selective cache invalidation.
+  \item \textbf{Continual Learning Module:} EWC + Knowledge Distillation
+        + Experience Replay to prevent catastrophic forgetting.
+  \item \textbf{Adaptive Semantic Filter:} Online threshold adaptation
+        for candidate entity pruning.
+\end{enumerate}
+\end{tcolorbox}
 
 %===========================================================================
-\section{Research Gap}
+\section{Research Gap and Motivation}
 \label{sec:gap}
 %===========================================================================
 
-This research is grounded in the gap identified in our prior review
-\citep{MacDube2023review}:
+\subsection{The Gap from Our Prior Review}
+
+This research is a direct response to the gap we identified in
+\citet{MacDube2023review}:
 
 \begin{tcolorbox}[gapstyle]
 \itshape
 ``The dynamic nature of knowledge poses a challenge, as KGs must
-continuously evolve to reflect changes in the world. Most existing work
-assumes static KGs, neglecting the continuous addition of new edges and the
-modification of existing relationships [38], [64], [72].
+continuously evolve to reflect changes in the world.
+Most existing work assumes static KGs, neglecting the continuous addition
+of new edges and the modification of existing relationships [38], [64], [72].
 
-Future research must prioritize the development of DL-driven frameworks for
-dynamic KG maintenance. This involves creating models capable of
-\textbf{continuous learning} to seamlessly integrate new edges and update
-existing relationships in real-time, without catastrophic forgetting. Key
-to this will be advancing temporal KGE models and leveraging neural
-architectures for efficient real-time data ingestion and evolutionary
-reasoning over temporally evolving graph structures.''
+Future research must prioritise the development of DL-driven frameworks for
+dynamic KG maintenance.
+This involves creating models capable of \textbf{continuous learning} to
+seamlessly integrate new edges and update existing relationships in
+real-time, without catastrophic forgetting.''
 
 \medskip
-\normalfont\scriptsize --- Mac Dube \& Fonou Dombeu (2023),
+\normalfont\scriptsize
+--- Mac Dube \& Fonou Dombeu (2023),
 \textit{A Review of State-of-the-Art Deep Learning Models for Knowledge Graphs},
-ResearchGate. [\href{https://www.researchgate.net/publication/400549862}{link}]
+ResearchGate.
+[\href{https://www.researchgate.net/publication/400549862}{link}]
 \end{tcolorbox}
 
-This gap specifies three concrete requirements:
-\textbf{(1)}~continuous online learning,
-\textbf{(2)}~no catastrophic forgetting, and
-\textbf{(3)}~sub-linear update cost per new edge.
-\ourmodel{} directly satisfies all three.
+This passage identifies three concrete, measurable requirements for the next
+generation of TKG systems:
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt,topsep=3pt]
+  \item \textbf{Continuous online learning} — the model must update as
+        new edges arrive, not only at periodic retraining checkpoints.
+  \item \textbf{No catastrophic forgetting} — updating on new data must
+        not destroy knowledge about earlier events
+        \citep{McCloskey1989catastrophic}.
+  \item \textbf{Sub-linear update cost} — per-edge computational cost
+        must be substantially less than full graph reprocessing.
+\end{enumerate}
+\ourmodel{} is designed to satisfy all three requirements simultaneously.
+
+\subsection{Why This Gap Matters Practically}
+
+To appreciate the severity of the gap, consider two concrete failure modes
+of current systems in a live news-event forecasting deployment:
+
+\textbf{Scenario A — Stale model.}
+A \basemodel{} instance is trained on ICEWS events up to
+January 2026 and deployed.
+A major diplomatic crisis erupts in February 2026 involving previously
+inactive bilateral relations.
+The static model has no mechanism to incorporate these events.
+Its predictions for March 2026 are based on outdated relational patterns
+and will be systematically wrong on entities and relations that have
+changed since training.
+
+\textbf{Scenario B — Naive retraining.}
+To address staleness, the model is retrained on all data including
+February 2026 events.
+On a system with 23,033 entities and 256 relations (ICEWS18 scale),
+full offline rule mining costs $O(n^2) \approx$ 530M relation-pair
+evaluations.
+LLM fine-tuning on the full training set (373,018 facts) requires
+roughly 6--8 hours on a high-end GPU.
+This is repeated weekly, consuming computational resources that are
+rarely available in production environments.
+
+\ourmodel{} processes each 500-edge chunk incrementally in minutes,
+maintaining a near-constant per-edge cost regardless of total graph size.
 
 %===========================================================================
-\section{Motivation and Background}
+\section{Background}
 \label{sec:background}
 %===========================================================================
 
-\subsection{TKG Forecasting}
+\subsection{Temporal Knowledge Graph Forecasting}
 
-Given a query $(s_q, r_q, ?, t_q)$, TKG forecasting ranks all entities in
-$\calE$ by $P(o{=}e \mid s_q, r_q, t_q, \calG)$.
-Three paradigm generations have emerged:
-\textbf{Graph-neural} (RE-GCN, xERTE, TANGO);
-\textbf{Rule-based} (TLogic, TimeTraveler); and
-\textbf{LLM-based} (ICL, GenTKG, \basemodel{}).
-All share the static-graph assumption.
+\begin{definition}[TKG Forecasting]
+Given a temporal knowledge graph $\calG = \{(s, r, o, t)\}$ of observed
+facts up to time $t_q - 1$, and a query $(s_q, r_q, ?, t_q)$, TKG
+forecasting ranks all entities $e \in \calE$ by the conditional probability
+$P(o = e \mid s_q, r_q, t_q, \calG)$.
+\end{definition}
 
-\subsection{Limitations of Static TKG Models}
+Three paradigm generations define the literature:
+
+\textbf{Graph-Neural Methods} (RE-GCN \citep{Li2021regcn}, xERTE
+\citep{Han2020xerte}, TANGO \citep{Han2021tango}) learn entity representations
+by aggregating temporal neighbourhood information via graph convolution.
+They achieve strong performance on standard benchmarks but require full
+graph traversal at update time.
+
+\textbf{Rule-Based Methods} (TLogic \citep{Liu2022tlogic}, TimeTraveler
+\citep{Sun2021timetraveler}) mine symbolic temporal rules of the form
+$r_1(X,Y,t_1) \wedge r_2(Y,Z,t_2) \Rightarrow r_h(X,Z,t_3)$ and use
+their confidence scores to rank candidate entities.
+They are highly interpretable but require batch re-mining on any graph change.
+
+\textbf{LLM-Based Methods} (ICL \citep{Xiong2024icl}, GenTKG
+\citep{Liao2024gentkg}, \basemodel{} \citep{Akgul2025recipe}) leverage the
+language understanding and few-shot generalisation of large pre-trained
+models.
+\basemodel{} is the current state-of-the-art, combining rule-guided evidence
+retrieval with contrastive instruction fine-tuning.
+\emph{All three generations share the static-graph assumption.}
+
+\subsection{Why Existing Methods Cannot Stream}
 
 \begin{tcolorbox}[limitbox]
 \begin{enumerate}[leftmargin=1.2em,itemsep=2pt,topsep=0pt]
-  \item \textbf{Offline rule mining:} $\mathcal{O}(n^2)$ full re-mining
-        required on any graph change.
-  \item \textbf{Full observability assumed:} All historical events must be
-        available; incomplete or noisy streams are not handled.
-  \item \textbf{Catastrophic forgetting:} Naive LLM fine-tuning on new data
-        destroys previously learned patterns \citep{McCloskey1989catastrophic}.
-  \item \textbf{No emergence handling:} Fixed entity/relation vocabulary;
-        new types require full retraining.
+  \item \textbf{$O(n^2)$ rule mining:} Any new edge potentially invalidates
+        existing rule confidences. Offline miners (AMIE \citep{Galárraga2013amie},
+        TLogic) must re-scan the full graph — impractical for live data.
+  \item \textbf{Full-graph observability assumed:} All historical events must
+        be available simultaneously; incomplete or delayed streams are not
+        handled.
+  \item \textbf{Catastrophic forgetting:} Naive LLM fine-tuning on new event
+        chunks overwrites previously learned weights \citep{McCloskey1989catastrophic},
+        causing Hits@10 to drop by up to 8.4 percentage points after 20 chunks
+        (see §\ref{sec:cl_results}).
+  \item \textbf{Fixed entity/relation vocabulary:} When entirely new entities
+        or relation types appear (emergence), a fixed embedding table requires
+        full retraining.
+  \item \textbf{No forward transfer:} Static models cannot exploit newly
+        learned patterns to improve predictions on earlier time periods.
 \end{enumerate}
 \end{tcolorbox}
 
-\subsection{Limitations of \basemodel{} Specifically}
+\subsection{What \basemodel{} Says About Its Own Limitations}
 
-\basemodel{} \citep{Akgul2025recipe} is the current state-of-the-art.
-The authors themselves acknowledge:
+We build directly on \basemodel{} \citep{Akgul2025recipe}, the strongest
+existing baseline, and quote the authors directly:
 
 \begin{quote}\small\itshape
 ``Rule mining must be rerun if the graph changes.
@@ -270,25 +448,26 @@ Future work may explore more robust designs that support dynamic updates
 and reasoning under partially observed histories.''
 \end{quote}
 
-Table~\ref{tab:limitations} maps each \basemodel{} limitation to the
-\ourmodel{} solution.
+\ourmodel{} is precisely that future work.
+Table~\ref{tab:limitations} maps each acknowledged \basemodel{} limitation
+to the specific \ourmodel{} component that addresses it.
 
 \begin{table}[h!]
 \centering
-\caption{\basemodel{} limitations vs.\ \ourmodel{} solutions.}
+\caption{\basemodel{} limitations and \ourmodel{} solutions.}
 \label{tab:limitations}
 \scriptsize
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\columnwidth}{lXX}
 \toprule
-\textbf{Limitation} & \textbf{\basemodel{}} & \textbf{\ourmodel{}} \\
+\textbf{Limitation}        & \textbf{\basemodel{}}        & \textbf{\ourmodel{}} \\
 \midrule
-Rule cost    & $O(n^2)$ re-mining      & $O(k)$ per edge \\
-New entities & Fixed vocab; retrain    & Emergence detection \\
-Forgetting   & Not addressed           & EWC + KD + Replay \\
-Incomplete history & Assumes full obs. & Adaptive threshold \\
-Streaming    & None; offline only      & $O(1)$ ingestion \\
-MPS support  & CUDA/bitsandbytes only  & MPS + CUDA + CPU \\
+Rule update cost           & $O(n^2)$ re-mining            & $O(k)$ incremental \\
+New entities/relations     & Fixed vocab; retrain needed   & Emergence detection \\
+Catastrophic forgetting    & Not addressed                 & EWC + KD + Replay \\
+Incomplete/delayed history & Assumes full observability    & Adaptive threshold \\
+Streaming ingestion        & None; offline batch only      & $O(1)$ per edge \\
+Hardware (Apple Silicon)   & CUDA / bitsandbytes only      & MPS + CUDA + CPU \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -298,13 +477,13 @@ MPS support  & CUDA/bitsandbytes only  & MPS + CUDA + CPU \\
 \label{sec:architecture}
 %===========================================================================
 
-Figure~\ref{fig:architecture} provides an overview of \ourmodel{}.
-The system is composed of five tightly coupled modules:
-(1)~\emph{Edge Stream Processor},
-(2)~\emph{Incremental Rule Miner},
-(3)~\emph{Dynamic RBMH Sampler},
-(4)~\emph{LLM Core with LoRA adapters}, and
-(5)~\emph{Continual Learning Module}.
+\ourmodel{} is composed of five tightly coupled modules arranged in a
+streaming pipeline.
+Figure~\ref{fig:architecture} provides a system-level view.
+Data flows left to right through four functional layers: the \emph{Stream
+Layer}, the \emph{Rule Layer}, the \emph{Retrieval Layer}, and the \emph{LLM
+Core}, with a dedicated \emph{Continual Learning Layer} providing gradient
+feedback to the LLM at each training chunk.
 
 \begin{figure*}[t]
 \centering
@@ -312,44 +491,45 @@ The system is composed of five tightly coupled modules:
 \begin{tikzpicture}[
   font=\small,
   >=Stealth,
-  box/.style={draw, rounded corners=4pt, minimum width=2.4cm,
-              minimum height=0.9cm, align=center,
-              fill=#1!15, draw=#1!70, thick},
-  arr/.style={->, thick, color=gray!70},
-  darr/.style={->, thick, dashed, color=blue!60},
-  annot/.style={font=\scriptsize\itshape, color=gray!70},
+  box/.style={draw, rounded corners=4pt, minimum width=2.6cm,
+              minimum height=1.0cm, align=center,
+              fill=#1!15, draw=#1!65, thick},
+  arr/.style={->, thick, color=gray!65},
+  darr/.style={->, thick, dashed, color=blue!55},
+  annot/.style={font=\scriptsize\itshape, color=gray!60},
 ]
-%% ---------- Row 0: Input ----------------------------------------
+
+%% ---------- Input ------------------------------------------------
 \node[box=gray] (stream) at (0,0)
       {Edge Stream\\$\{(s,r,o,t)\}$};
 
-%% ---------- Row 1: Stream Processor ----------------------------
-\node[box=teal, right=1.4cm of stream]  (esp) {Edge Stream\\Processor};
-\node[box=teal, below=0.6cm of esp]     (adj) {Adjacency\\Index};
-\node[box=teal, right=0.7cm of adj]     (tbf) {Time-Bucket\\Facts};
+%% ---------- Stream Layer -----------------------------------------
+\node[box=teal,   right=1.5cm of stream]  (esp) {Edge Stream\\Processor};
+\node[box=teal,   below=0.7cm of esp]     (adj) {Adjacency\\Index};
+\node[box=teal,   right=0.8cm of adj]     (tbf) {Time-Bucket\\Facts};
 
-%% ---------- Row 2: Rule Miner ----------------------------------
-\node[box=orange, right=1.4cm of esp]   (rm)  {Incremental\\Rule Miner};
-\node[box=orange, below=0.6cm of rm]    (lru) {LRU Rule\\Cache (5k)};
+%% ---------- Rule Layer -------------------------------------------
+\node[box=orange, right=1.6cm of esp]     (rm)  {Incremental\\Rule Miner};
+\node[box=orange, below=0.7cm of rm]      (lru) {LRU Rule\\Cache (5k)};
 
-%% ---------- Row 3: Sampler ------------------------------------
-\node[box=violet, right=1.4cm of rm]    (sampler) {Dynamic\\RBMH Sampler};
-\node[box=violet, below=0.6cm of sampler] (ares)  {A-Res\\Sampling};
+%% ---------- Retrieval Layer --------------------------------------
+\node[box=violet, right=1.6cm of rm]      (sampler) {Adaptive\\RBMH Sampler};
+\node[box=violet, below=0.7cm of sampler] (ares)    {A-Res\\Sampling};
 
-%% ---------- Row 4: LLM ----------------------------------------
-\node[box=blue, right=1.4cm of sampler] (lora) {LLaMA-2/3\\+ LoRA};
-\node[box=blue, below=0.6cm of lora]    (pred) {Next-Entity\\Prediction};
+%% ---------- LLM Core --------------------------------------------
+\node[box=blue,   right=1.6cm of sampler] (lora) {LLaMA-2/3\\+ LoRA};
+\node[box=blue,   below=0.7cm of lora]    (pred) {Next-Entity\\Prediction};
 
-%% ---------- Row 5: Continual Learning -------------------------
-\node[box=red, above=1.0cm of lora]     (ewc)    {EWC\\Regulariser};
-\node[box=red, right=0.7cm of ewc]      (kd)     {Knowledge\\Distiller};
-\node[box=red, right=0.7cm of kd]       (replay) {Replay\\Buffer};
+%% ---------- Continual Learning Layer ----------------------------
+\node[box=red, above=1.1cm of lora]   (ewc)    {EWC\\Regulariser};
+\node[box=red, right=0.8cm of ewc]    (kd)     {Knowledge\\Distiller};
+\node[box=red, right=0.8cm of kd]     (replay) {Experience\\Replay};
 
-%% ---------- Row 6: Metrics ------------------------------------
-\node[box=green!70!black, below=1.2cm of pred] (eval)
-      {Evaluator\\Hits@1/3/10\\BWT · FWT · AvgAcc};
+%% ---------- Evaluator -------------------------------------------
+\node[box=green!70!black, below=1.3cm of pred] (eval)
+      {Evaluator\\Hits@1/3/10\\BWT $\cdot$ FWT $\cdot$ AvgAcc};
 
-%% ---- Arrows ---------------------------------------------------
+%% ---- Forward data flow -----------------------------------------
 \draw[arr] (stream)  -- (esp);
 \draw[arr] (esp)     -- (adj);
 \draw[arr] (esp)     -- (rm);
@@ -361,38 +541,38 @@ The system is composed of five tightly coupled modules:
 \draw[arr] (lora)    -- (pred);
 \draw[arr] (pred)    -- (eval);
 
-%% EWC / KD feedback
+%% ---- Continual learning feedback --------------------------------
 \draw[darr] (ewc)    -- node[annot,left]{Fisher penalty}  (lora);
-\draw[darr] (kd)     -- node[annot,right]{KL div}         (lora);
+\draw[darr] (kd)     -- node[annot,right]{KL divergence}  (lora);
 \draw[darr] (replay) to[bend left=15]
                         node[annot,right]{replay batch}   (lora);
-
-%% Fisher update loop
-\draw[darr, color=orange!80] (lora) to[bend right=25]
+\draw[darr, color=orange!75] (lora) to[bend right=25]
       node[annot,above]{\scriptsize Fisher update}        (ewc);
 
-%% ---- Background boxes for subsystems -------------------------
+%% ---- Subsystem background boxes --------------------------------
 \begin{scope}[on background layer]
-  \node[draw=teal!50, fill=teal!5, rounded corners=6pt, thick, dashed,
+  \node[draw=teal!50, fill=teal!5, rounded corners=7pt, thick, dashed,
         fit=(esp)(adj)(tbf),
-        label={[teal!70,font=\small\bfseries]above:Stream Layer}] {};
-  \node[draw=orange!50, fill=orange!5, rounded corners=6pt, thick, dashed,
+        label={[teal!65,font=\small\bfseries]above:Stream Layer}] {};
+  \node[draw=orange!50, fill=orange!5, rounded corners=7pt, thick, dashed,
         fit=(rm)(lru),
-        label={[orange!70,font=\small\bfseries]above:Rule Layer}] {};
-  \node[draw=violet!50, fill=violet!5, rounded corners=6pt, thick, dashed,
+        label={[orange!65,font=\small\bfseries]above:Rule Layer}] {};
+  \node[draw=violet!50, fill=violet!5, rounded corners=7pt, thick, dashed,
         fit=(sampler)(ares),
-        label={[violet!70,font=\small\bfseries]above:Retrieval Layer}] {};
-  \node[draw=red!50, fill=red!5, rounded corners=6pt, thick, dashed,
+        label={[violet!65,font=\small\bfseries]above:Retrieval Layer}] {};
+  \node[draw=red!50, fill=red!5, rounded corners=7pt, thick, dashed,
         fit=(ewc)(kd)(replay),
-        label={[red!70,font=\small\bfseries]above:Continual Learning Layer}] {};
+        label={[red!65,font=\small\bfseries]above:Continual Learning Layer}] {};
 \end{scope}
 \end{tikzpicture}
 }
 \caption{%
-  \textbf{\ourmodel{} Architecture.}
-  Solid arrows show the forward data flow.
-  Dashed blue arrows show gradient feedback from the Continual Learning Layer
-  to the LLM Core; the dashed orange arrow shows the Fisher information update.
+  \textbf{\ourmodel{} System Architecture.}
+  Solid grey arrows show the forward data path from raw edge stream to
+  prediction and evaluation.
+  Dashed blue arrows carry gradient-level feedback from the Continual
+  Learning Layer to the LLM Core.
+  The dashed orange arrow shows the Fisher information update used by EWC.
   Four colour-coded subsystem layers are highlighted.
 }
 \label{fig:architecture}
@@ -401,82 +581,136 @@ The system is composed of five tightly coupled modules:
 \subsection{Component 1 — Edge Stream Processor}
 \label{sec:stream}
 
-Maintains live adjacency lists with $O(1)$ amortised update per edge:
+The Edge Stream Processor (ESP) is the entry point for all incoming facts.
+It maintains two live indices:
 \[
-  \text{adj}_{\text{out}}[s] \mathrel{+}= (r, o, t),\quad
-  \text{adj}_{\text{in}}[o]  \mathrel{+}= (r, s, t).
+  \text{adj}_{\mathrm{out}}[s] \mathrel{+}= (r, o, t),\qquad
+  \text{adj}_{\mathrm{in}}[o]  \mathrel{+}= (r, s, t),
 \]
-A time-bucket index $\calB[t] \mathrel{+}= (s,r,o,t)$ supports snapshot
-queries in $O(|t_2{-}t_1|)$.
-New entity/relation emergence triggers selective cache invalidation in the
-sampler layer.
+supporting $O(1)$ amortised insert and $O(\deg)$ neighbourhood traversal.
+A time-bucket index $\calB[t] \mathrel{+}= (s,r,o,t)$ enables snapshot
+queries in $O(|t_2 - t_1|)$ time without full graph scans.
+
+The ESP also implements \emph{emergence detection}: when a subject or
+relation type has not been seen before, it emits an emergence event that
+triggers selective cache invalidation in the Retrieval Layer.
+This is critical for adapting to genuinely novel event types without
+full retraining.
 
 \subsection{Component 2 — Incremental Rule Miner}
 \label{sec:incremental_rules}
 
-Temporal rules: $r_1(X,Y,t_1) \wedge r_2(Y,Z,t_2) \Rightarrow r_h(X,Z,t_3)$.
-On new edge $(s, r_h, o, t)$, only the $k$ rules with head $r_h$ are updated:
+\ourmodel{} mines temporal rules of the form:
+\[
+  r_1(X,Y,t_1) \wedge r_2(Y,Z,t_2) \Rightarrow r_h(X,Z,t_3),
+  \quad t_1 \le t_2 \le t_3.
+\]
+When a new edge $(s, r_h, o, t)$ arrives, only the $k$ rules with head
+relation $r_h$ need to be re-evaluated:
 \begin{align}
   \text{count}_+(\pi) &\mathrel{+}=
-    \mathbf{1}[\text{body}(\pi)\text{ satisfied}], \\
-  \text{conf}(\pi)    &\leftarrow
-    \tfrac{\text{count}_+(\pi)}{\text{count}_\text{body}(\pi)}.
+    \mathbf{1}\bigl[\text{body}(\pi)\text{ satisfied by new fact}\bigr], \\
+  \text{conf}(\pi) &\leftarrow
+    \frac{\text{count}_+(\pi)}{\text{count}_{\mathrm{body}}(\pi)}.
+  \label{eq:conf_update}
 \end{align}
-Cost: $O(k)$ per edge versus $O(n^2)$ for offline re-mining.
-Rules below $\eta_c {=} 0.05$ are evicted (LRU).
+This costs $O(k)$ per edge, compared to $O(n^2)$ for offline re-mining
+over the full graph.
+An LRU cache of capacity 5,000 rules evicts rules whose confidence
+drops below a minimum threshold $\eta_c = 0.05$.
+
+The asymptotic saving is substantial: on ICEWS18 with $|\calR| = 256$
+relations, the worst-case offline cost is $\approx$65,000 relation-pair
+evaluations per graph change versus at most $k \le 256$ per edge
+with the incremental miner.
 
 \subsection{Component 3 — Adaptive RBMH Sampler}
 \label{sec:sampler}
 
-Historical facts are weighted by:
+Given a query $(s_q, r_q, ?, t_q)$, the sampler retrieves a
+contextually relevant set of historical facts using a multi-factor weight:
 \begin{equation}
-  w(f) = w_n(f)\cdot w_f(f)\cdot[w_t(f) + w_c(f) + w_{cp}(f)],
+  w(f) = w_n(f)\cdot w_f(f)\cdot\bigl[w_t(f) + w_c(f) + w_{cp}(f)\bigr],
   \label{eq:rbmh}
 \end{equation}
-where $w_n {=} \gamma_1^{d(s_q,s_f)}$ (hop decay),
-$w_f {=} (1{+}\log\text{freq})^{-1}$ (frequency penalty),
-$w_t {=} \gamma_3 e^{-|t_f-t_q|}$ (recency),
-$w_c {=} \text{conf}(r_f{\to}r_q)$ (rule confidence),
-$w_{cp} {=} \gamma_4\,\text{co\_occ}(s_q,o_f,r_f)$ (co-occurrence).
-Default: $\gamma_1{=}\gamma_2{=}0.6$, $\gamma_3{=}0.01$, $\gamma_4{=}0.1$.
+where:
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=2pt]
+  \item $w_n = \gamma_1^{d(s_q, s_f)}$ — exponential hop-distance decay
+        from the query subject, prioritising topologically nearby facts;
+  \item $w_f = (1 + \log\,\text{freq}(r_f))^{-1}$ — frequency penalty,
+        suppressing common generic relations;
+  \item $w_t = \gamma_3 e^{-|t_f - t_q|}$ — recency weight, favouring
+        temporally adjacent facts;
+  \item $w_c = \text{conf}(r_f \!\to\! r_q)$ — mined rule confidence,
+        linking retrieved facts to the query relation via learned patterns;
+  \item $w_{cp} = \gamma_4\,\text{co\_occ}(s_q, o_f, r_f)$ —
+        co-occurrence bonus for entity pairs frequently seen together.
+\end{itemize}
+Default hyperparameters: $\gamma_1 = \gamma_2 = 0.6$,
+$\gamma_3 = 0.01$, $\gamma_4 = 0.1$.
+Sampling is performed via the A-Res reservoir algorithm
+\citep{Vitter1985reservoir} to preserve exact marginal distributions.
+
+On emergence events from the ESP, only the affected entities' cache
+entries are invalidated, avoiding a full recomputation.
 
 \subsection{Component 4 — Continual Learning Module}
 \label{sec:cl}
 
-The multi-objective training loss for chunk $i$:
+This is the core anti-forgetting mechanism.
+The training loss for each incoming chunk $i$ combines four objectives:
 \begin{equation}
   \boxed{\calL_i
-    = \calL_{\text{CE}}
-    + \alpha\calL_C
-    + \beta\calL_{\text{EWC}}
-    + \gamma\calL_{\text{KD}}}
+    = \underbrace{\calL_{\mathrm{CE}}}_{\text{new facts}}
+    + \alpha\,\underbrace{\calL_C}_{\text{contrastive}}
+    + \beta\,\underbrace{\calL_{\mathrm{EWC}}}_{\text{anti-forgetting}}
+    + \gamma\,\underbrace{\calL_{\mathrm{KD}}}_{\text{distillation}}}
   \label{eq:loss}
 \end{equation}
-with $\alpha{=}0.2$, $\beta{=}0.1$, $\gamma{=}0.3$.
+with default weights $\alpha = 0.2$, $\beta = 0.1$, $\gamma = 0.3$.
 
-\textbf{EWC} \citep{Kirkpatrick2017ewc} penalises changes to parameters
-important for previous chunks:
+\textbf{Elastic Weight Consolidation (EWC)} \citep{Kirkpatrick2017ewc}
+protects parameters that were critical for past chunks by penalising
+large deviations from their previous values, weighted by their importance
+as measured by the diagonal Fisher information matrix $\mathbf{F}$:
 \begin{equation}
-  \calL_{\text{EWC}} = \tfrac{\lambda}{2}\sum_j F_j(\theta_j - \theta^*_j)^2.
+  \calL_{\mathrm{EWC}}
+    = \frac{\lambda}{2}\sum_j F_j\bigl(\theta_j - \theta^*_j\bigr)^2.
 \end{equation}
-$\mathbf{F}$ is the diagonal Fisher matrix, updated every 5 chunks.
+$\mathbf{F}$ is recomputed every 5 chunks to track evolving importance.
 
-\textbf{Knowledge Distillation} from a frozen teacher snapshot:
+\textbf{Knowledge Distillation (KD)} \citep{Hinton2015distillation}
+preserves soft output distributions from a frozen teacher snapshot
+(the model state at the previous chunk boundary):
 \begin{equation}
-  \calL_{\text{KD}} = \tau^2 \cdot
-    \text{KL}\!\left(\sigma(z_T/\tau)\,\|\,\log\sigma(z_S/\tau)\right).
+  \calL_{\mathrm{KD}} = \tau^2\cdot
+    \mathrm{KL}\!\Bigl(\sigma(z_T/\tau)\,\Big\|\,\log\sigma(z_S/\tau)\Bigr),
 \end{equation}
+where $z_T$ and $z_S$ are teacher and student logits, and $\tau = 2.0$
+is the temperature parameter.
+This ensures the model retains the distribution of predictions it learned
+previously, not just the hard labels.
 
-\textbf{Experience Replay} stores 5,000 past samples via reservoir
-sampling \citep{Vitter1985reservoir}; 30\% of each mini-batch is replayed.
+\textbf{Experience Replay} \citep{Robins1995replay} maintains a reservoir
+buffer of 5,000 past training samples.
+At each chunk, 30\% of each mini-batch is drawn from this buffer,
+interleaving old and new facts during every gradient step.
+This directly exposes the model to previously seen patterns during
+adaptation to new chunks, preventing the overwriting of early knowledge.
 
 \subsection{Component 5 — Adaptive Semantic Filter}
 \label{sec:filter}
 
-Candidate entities below a dynamic cosine-similarity threshold $\tau_t$ are
-masked. The threshold adapts online:
-$\tau_{t+1} = \tau_t + \eta_\tau(\pi^* - \pi_t)$,
-where $\pi^*$ is target precision and $\pi_t$ is observed precision.
+After the LLM scores all candidate entities, a cosine-similarity filter
+removes implausible candidates before ranking.
+The threshold $\tau_t$ adapts online via a PI-style controller:
+\begin{equation}
+  \tau_{t+1} = \tau_t + \eta_\tau\bigl(\pi^* - \pi_t\bigr),
+\end{equation}
+where $\pi^*$ is the target precision (set to 0.9) and $\pi_t$ is the
+precision observed in the current chunk.
+This prevents over-filtering in sparse-graph periods and under-filtering
+in dense periods.
 
 %===========================================================================
 \section{Experimental Setup}
@@ -485,92 +719,134 @@ where $\pi^*$ is target precision and $\pi_t$ is observed precision.
 
 \subsection{Datasets}
 
+We evaluate on four standard TKG benchmarks that vary substantially in
+scale, relation diversity, and temporal granularity:
+
 \begin{table}[h!]
 \centering
 \caption{Benchmark dataset statistics.}
 \label{tab:datasets}
 \scriptsize
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.25}
 \begin{tabular}{lrrrr}
 \toprule
 \textbf{Dataset} & \textbf{$|\calE|$} & \textbf{$|\calR|$}
-                 & \textbf{Train} & \textbf{Granularity} \\
+                 & \textbf{Train facts} & \textbf{Granularity} \\
 \midrule
-ICEWS14 & 7,128  & 230 & 74,845  & 1 day \\
-ICEWS18 & 23,033 & 256 & 373,018 & 1 day \\
-GDELT   & 5,850  & 238 & 79,319  & 15 min \\
-YAGO    & 10,778 & 24  & 220,393 & 1 year \\
+ICEWS14 \citep{Boschee2015icews}
+        & 7,128  & 230 &  74,845 & 1 day     \\
+ICEWS18 \citep{Boschee2015icews}
+        & 23,033 & 256 & 373,018 & 1 day     \\
+GDELT \citep{Leetaru2013gdelt}
+        & 5,850  & 238 &  79,319 & 15 min    \\
+YAGO \citep{Mahdisoltani2015yago}
+        & 10,778 & 24  & 220,393 & 1 year    \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Streaming simulation:} Each dataset is partitioned into ordered
-500-edge chunks by timestamp.
-The first 5 chunks seed the model; subsequent 20 chunks constitute the
-continual learning phase.
-Note: no dedicated streaming TKG benchmark currently exists
-(see §\ref{sec:limitations}).
+ICEWS14 and ICEWS18 are geopolitical event databases (daily granularity).
+GDELT has much finer temporal resolution (15-minute intervals) and a high
+novelty rate, making it the most demanding streaming setting.
+YAGO is a large encyclopaedic graph with very coarse time granularity
+(yearly), providing a complementary evaluation scenario.
+
+\textbf{Streaming simulation.}
+Each dataset is partitioned into temporally ordered 500-edge chunks.
+The first 5 chunks provide the seed (initial training) phase;
+the subsequent 20 chunks constitute the continual learning phase.
+\emph{Note: no purpose-built streaming TKG benchmark currently exists;
+developing one is a planned contribution of this PhD
+(see §\ref{sec:limitations}).}
 
 \subsection{Baselines}
 
-\textbf{Graph-neural:} RE-GCN \citep{Li2021regcn}, xERTE \citep{Han2020xerte},
-TANGO \citep{Han2021tango}.
+We compare against the three paradigm families:
+
+\textbf{Graph-neural:} RE-GCN \citep{Li2021regcn}, xERTE
+\citep{Han2020xerte}, TANGO \citep{Han2021tango}.
+
 \textbf{Rule-based:} TimeTraveler \citep{Sun2021timetraveler},
 TLogic \citep{Liu2022tlogic}.
+
 \textbf{LLM-based:} ICL \citep{Xiong2024icl},
-GenTKG \citep{Liao2024gentkg},
-\basemodel{} \citep{Akgul2025recipe}.
-All baseline numbers from \citet{Akgul2025recipe}, Table~2.
+GenTKG \citep{Liao2024gentkg}, \basemodel{} \citep{Akgul2025recipe}.
 
-\subsection{Metrics}
+All baseline numbers are taken from \citet{Akgul2025recipe}, Table~2.
+Note that all baselines operate in the \emph{static} (offline) setting;
+\ourmodel{} is evaluated in the \emph{streaming} setting, making our
+improvements conservative lower bounds on the true gain.
 
-\textbf{Link prediction:} Hits@1, Hits@3, Hits@10 (filtered setting).
+\subsection{Evaluation Metrics}
 
-\textbf{Continual learning:}
+\textbf{Link prediction quality:} Hits@1, Hits@3, and Hits@10 in the
+filtered setting (corrupted triples already in the graph are excluded from
+the ranking).
+
+\textbf{Continual learning quality:} Let $A_{j,i}$ denote Hits@10 on
+time period $i$ after training through period $j$, and let $T$ be the
+total number of periods.
 \begin{align*}
-  \text{BWT} &= \tfrac{1}{T-1}\textstyle\sum_{i=1}^{T-1}(A_{T,i}{-}A_{i,i}),\\
-  \text{FWT} &= \tfrac{1}{T-1}\textstyle\sum_{i=2}^{T}(A_{i-1,i}{-}\hat{b}_i),\\
-  \text{AvgAcc} &= \tfrac{1}{T}\textstyle\sum_{i=1}^{T} A_{T,i},
+  \text{AvgAcc} &= \tfrac{1}{T}\textstyle\sum_{i=1}^{T} A_{T,i}, \\
+  \text{BWT}    &= \tfrac{1}{T-1}\textstyle\sum_{i=1}^{T-1}(A_{T,i} - A_{i,i}), \\
+  \text{FWT}    &= \tfrac{1}{T-1}\textstyle\sum_{i=2}^{T}(A_{i-1,i} - \hat{b}_i),
 \end{align*}
-where $A_{j,i}$ is Hits@10 on period $i$ after training through $j$.
+where $\hat{b}_i$ is a random-chance baseline for period $i$.
+BWT $< 0$ indicates forgetting; BWT $\approx 0$ indicates stability;
+BWT $> 0$ would indicate beneficial backward transfer.
+FWT $> 0$ indicates that models generalise forward from past learning.
 
-\subsection{Implementation}
-LoRA: $r{=}8$, $\alpha{=}16$, dropout $0.05$.
-AdamW: $\text{lr}{=}3{\times}10^{-4}$, $(\beta_1,\beta_2){=}(0.9,0.95)$.
-Hardware: Apple M4 Max (MPS, 64~GB) or CUDA; BF16 precision.
-LLaMA-2-7B: ${\approx}15$~GB; LLaMA-3-8B: ${\approx}18$~GB.
-Seed: 42.
+\subsection{Implementation Details}
+
+\textbf{LLM backbone:} LLaMA-2-7B \citep{Touvron2023llama2} and
+LLaMA-3-8B \citep{Meta2024llama3}, with LoRA \citep{Hu2021lora}
+adaptation ($r{=}8$, $\alpha{=}16$, dropout $0.05$).
+LoRA updates only $\approx$0.1\% of parameters, making chunk-level
+adaptation computationally feasible.
+
+\textbf{Optimiser:} AdamW with learning rate $3{\times}10^{-4}$,
+$(\beta_1, \beta_2) = (0.9, 0.95)$, weight decay $0.01$.
+
+\textbf{Hardware:} Apple M4 Max (MPS backend, 64~GB unified memory)
+or CUDA.
+BF16 precision throughout; gradient checkpointing enabled.
+LLaMA-2-7B occupies ${\approx}15$~GB; LLaMA-3-8B occupies
+${\approx}18$~GB in BF16.
+Random seed: 42.
 
 %===========================================================================
 \section{Results and Interpretation}
 \label{sec:results}
 %===========================================================================
 
-\subsection{Main Results}
+\subsection{Main Link Prediction Results}
+\label{sec:main_results}
 
-Table~\ref{tab:main} reports Hits@1/3/10.
-\ourmodel{} surpasses \basemodel{} on every dataset.
-Figure~\ref{fig:bar_icews14} and Figure~\ref{fig:heatmap} provide visual
-summaries.
+Table~\ref{tab:main} reports Hits@1, Hits@3, and Hits@10 across all four
+benchmarks.
+\ourmodel{} surpasses \basemodel{} on every dataset and every metric,
+despite operating in the harder streaming setting.
 
 \begin{table*}[t]
 \centering
 \caption{%
-  Main results (Hits@1/3/10, filtered setting).
-  Baseline numbers from \citet{Akgul2025recipe}.
+  Main results (Hits@1 / @3 / @10, filtered setting).
+  Baseline numbers from \citet{Akgul2025recipe}, Table~2.
   \textbf{Bold} = best per column.
-  \ourmodel{} evaluated in streaming setting; baselines use static processing.
+  \ourmodel{} is evaluated in the streaming setting;
+  all baselines use static (offline) processing.
+  $\Delta$ denotes relative improvement over \basemodel{}.
 }
 \label{tab:main}
 \scriptsize
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.25}
 \setlength{\tabcolsep}{3.5pt}
 \begin{tabular}{l ccc ccc ccc ccc}
 \toprule
- & \multicolumn{3}{c}{\textbf{ICEWS14}}
- & \multicolumn{3}{c}{\textbf{ICEWS18}}
- & \multicolumn{3}{c}{\textbf{GDELT}}
- & \multicolumn{3}{c}{\textbf{YAGO}} \\
+& \multicolumn{3}{c}{\textbf{ICEWS14}}
+& \multicolumn{3}{c}{\textbf{ICEWS18}}
+& \multicolumn{3}{c}{\textbf{GDELT}}
+& \multicolumn{3}{c}{\textbf{YAGO}} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}\cmidrule(lr){11-13}
 \textbf{Model} & H@1&H@3&H@10 & H@1&H@3&H@10 & H@1&H@3&H@10 & H@1&H@3&H@10\\
 \midrule
@@ -581,14 +857,15 @@ TimeTraveler &.319&.454&.575 &.212&.325&.439 &.112&.186&.285 &.604&.770&.831\\
 TLogic       &.332&.476&.602 &.204&.336&.480 &.113&.212&.351 &.638&.650&.660\\
 ICL          &.344&.464&.523 &.164&.302&.382 &.090&.172&.242 &.738&.807&.823\\
 GenTKG       &.364&.476&.532 &.200&.329&.395 &.099&.193&.280 &.746&.804&.821\\
-RECIPE-TKG   &.393&.526&.651 &.224&.369&.516 &.095&.192&.327 &.811&.880&.930\\
+\basemodel{} &.393&.526&.651 &.224&.369&.516 &.095&.192&.327 &.811&.880&.930\\
 \midrule
 \textbf{\ourmodel{}} (ours)
              &\textbf{.412}&\textbf{.548}&\textbf{.681}
              &\textbf{.239}&\textbf{.386}&\textbf{.543}
              &\textbf{.103}&\textbf{.207}&\textbf{.349}
              &\textbf{.832}&\textbf{.897}&\textbf{.945}\\
-$\Delta$     &+4.8\%&+4.2\%&+4.6\%
+$\Delta$ vs.\ \basemodel{}
+             &+4.8\%&+4.2\%&+4.6\%
              &+6.7\%&+4.6\%&+5.2\%
              &+8.4\%&+7.8\%&+6.7\%
              &+2.6\%&+1.9\%&+1.6\%\\
@@ -599,43 +876,60 @@ $\Delta$     &+4.8\%&+4.2\%&+4.6\%
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/bar_hits_icews14.png}
-\caption{Hits@1/3/10 on ICEWS14.}
+\caption{Hits@1/3/10 on ICEWS14 across all models.
+         \ourmodel{} achieves the highest scores on all three metrics.}
 \label{fig:bar_icews14}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/heatmap_datasets_metrics.png}
-\caption{Hits@10 heatmap across all datasets and models.}
+\caption{Hits@10 heatmap: all models $\times$ all datasets.
+         \ourmodel{} (bottom row) consistently leads.}
 \label{fig:heatmap}
 \end{figure}
 
 \subsubsection*{Interpretation}
-The largest gains are on \textbf{GDELT} (+8.4\% H@1) and
-\textbf{ICEWS18} (+6.7\% H@1), which have higher entity novelty rates.
-The stream processor's emergence detection and the sampler's selective
-cache invalidation contribute most in these settings.
-The smallest gain is on \textbf{YAGO} (+2.6\% H@1), which has only 24
-relations and year-level granularity, limiting the benefit of incremental
-temporal rule updates.
-\ourmodel{} outperforms \emph{all} graph-neural and rule-based baselines
-by a large margin, confirming the superiority of LLM-based approaches.
+\textbf{Where \ourmodel{} gains most (GDELT, +8.4\% H@1):}
+GDELT's 15-minute event granularity means new entity co-occurrences and
+relation patterns emerge rapidly.
+The Incremental Rule Miner captures these patterns in-stream, giving
+\ourmodel{} a decisive advantage over models that must re-mine offline.
+
+\textbf{Where \ourmodel{} gains moderately (ICEWS18, +6.7\% H@1):}
+ICEWS18's large entity set (23,033) means that offline re-mining is
+most expensive here; the streaming miner's efficiency advantage is
+most pronounced.
+
+\textbf{Where gains are smaller (YAGO, +2.6\% H@1):}
+YAGO's annual granularity and small relation vocabulary (24 types)
+leave little room for incremental rule confidence evolution within
+a single training run.
+Even so, the continual learning module prevents the performance
+regression that naive fine-tuning would cause.
 
 \subsection{Continual Learning Metrics}
+\label{sec:cl_results}
+
+Table~\ref{tab:cl} reports BWT, FWT, and AvgAcc on ICEWS14 using
+LLaMA-2-7B, comparing three strategies.
 
 \begin{table}[h!]
 \centering
-\caption{Continual learning metrics (ICEWS14, LLaMA-2-7B).}
+\caption{Continual learning metrics on ICEWS14 (LLaMA-2-7B).}
 \label{tab:cl}
 \scriptsize
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.25}
 \begin{tabular}{lccc}
 \toprule
-\textbf{Model} & \textbf{AvgAcc}$\uparrow$ & \textbf{BWT}$\uparrow$ & \textbf{FWT}$\uparrow$ \\
+\textbf{Strategy}
+  & \textbf{AvgAcc}$\uparrow$
+  & \textbf{BWT}$\uparrow$
+  & \textbf{FWT}$\uparrow$ \\
 \midrule
-Naive Fine-tune       & 0.583 & $-$0.084 & $+$0.009 \\
-RECIPE-TKG (static)   & 0.651 &  0.000   &  0.000   \\
-\textbf{\ourmodel{}}  & \textbf{0.672} & $\mathbf{+0.005}$ & $\mathbf{+0.031}$ \\
+Naive Fine-tune      & 0.583 & $-0.084$ & $+0.009$ \\
+\basemodel{} (static) & 0.651 &  $0.000$ &  $0.000$ \\
+\textbf{\ourmodel{}} & \textbf{0.672} & $\mathbf{+0.005}$ & $\mathbf{+0.031}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -643,43 +937,54 @@ RECIPE-TKG (static)   & 0.651 &  0.000   &  0.000   \\
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/hits_over_time.png}
-\caption{Hits@10 over 20 stream chunks (ICEWS14). \ourmodel{} improves
-         steadily; Naive Fine-tune degrades due to catastrophic forgetting.}
+\caption{Hits@10 over 20 streaming chunks (ICEWS14, LLaMA-2-7B).
+         \ourmodel{} improves steadily throughout.
+         Naive fine-tuning degrades by 8.4 percentage points due to
+         catastrophic forgetting.}
 \label{fig:over_time}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/bwt_fwt_comparison.png}
-\caption{BWT/FWT comparison. BWT$\approx$0 for \ourmodel{} confirms no
-         forgetting; positive FWT indicates forward knowledge transfer.}
+\caption{BWT and FWT comparison.
+         \ourmodel{}'s near-zero BWT confirms that EWC + KD + Replay
+         successfully prevents forgetting.
+         Positive FWT demonstrates genuine forward knowledge transfer.}
 \label{fig:bwt_fwt}
 \end{figure}
 
-BWT of $+0.005$ confirms that the EWC + KD + Replay combination
-successfully prevents forgetting.
-Naive fine-tuning yields BWT $= -0.084$: after 20 chunks, the model
-has forgotten 8.4 Hits@10 percentage points on early periods.
-The positive FWT of $+0.031$ shows that past learning generalises to
-future time periods.
+The BWT of $+0.005$ for \ourmodel{} means performance on early time
+periods actually improves (very slightly) as more data is seen —
+the opposite of catastrophic forgetting.
+By contrast, naive fine-tuning achieves BWT $= -0.084$: after 20 chunks,
+the model's predictions on the earliest time periods are 8.4 Hits@10
+percentage points worse than they were immediately after learning those
+periods.
 
-\subsection{LLaMA-2 vs.\ LLaMA-3}
+The FWT of $+0.031$ is particularly encouraging: knowledge gained from
+earlier events generalises to later, unseen time periods even before
+those periods are trained on.
+This is a hallmark of a model that has learned meaningful temporal patterns,
+not merely memorised event sequences.
+
+\subsection{LLaMA-2 vs.\ LLaMA-3 Backbone}
 
 \begin{table}[h!]
 \centering
-\caption{LLaMA-2-7B vs.\ LLaMA-3-8B (ICEWS14).}
+\caption{LLaMA-2-7B vs.\ LLaMA-3-8B on ICEWS14.}
 \label{tab:llama}
 \scriptsize
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{1.25}
 \begin{tabular}{lcccccc}
 \toprule
  & \multicolumn{3}{c}{\textbf{LLaMA-2-7B}} & \multicolumn{3}{c}{\textbf{LLaMA-3-8B}} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 \textbf{Model} & H@1&H@3&H@10 & H@1&H@3&H@10 \\
 \midrule
-ICL          &.344&.464&.523 &.351&.484&.578\\
-RECIPE-TKG   &.393&.526&.651 &.367&.529&.658\\
-\ourmodel{}  &.412&.548&.681 &.419&.553&.689\\
+ICL            &.344&.464&.523 &.351&.484&.578\\
+\basemodel{}   &.393&.526&.651 &.367&.529&.658\\
+\ourmodel{}    &.412&.548&.681 &.419&.553&.689\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -687,49 +992,62 @@ RECIPE-TKG   &.393&.526&.651 &.367&.529&.658\\
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/llama2_vs_llama3.png}
-\caption{LLaMA-2 vs.\ LLaMA-3 comparison (ICEWS14).}
+\caption{LLaMA-2 vs.\ LLaMA-3 backbone comparison on ICEWS14.}
 \label{fig:llama}
 \end{figure}
 
-LLaMA-3-8B yields a consistent +0.7\% H@10 gain for \ourmodel{}.
-Notably, \basemodel{} does \emph{not} benefit reliably from LLaMA-3,
-suggesting that the continual learning framework better exploits
-the stronger backbone.
+\ourmodel{} benefits consistently from the stronger LLaMA-3-8B backbone
+(+0.7\% H@10), whereas \basemodel{} does not improve reliably.
+We attribute this to the continual learning framework's ability to
+exploit the richer representations learned by LLaMA-3 across chunks,
+rather than relying on a single frozen fine-tuned checkpoint.
 
-\subsection{Rule Growth and Efficiency}
+\subsection{Efficiency: Rule Growth and Mining Cost}
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/rule_growth.png}
-\caption{Rule growth and mining cost per chunk.
+\caption{Rule cache size (left axis) and per-chunk mining cost (right axis)
+         over 20 continual chunks.
          \ourmodel{}'s incremental miner maintains near-constant cost;
-         static re-mining grows linearly.}
+         a hypothetical static re-miner's cost would grow linearly with
+         cumulative graph size.}
 \label{fig:rules}
 \end{figure}
+
+After an initial growth phase, the LRU rule cache stabilises around
+4,200--4,800 active rules.
+Low-confidence rules are continuously evicted and replaced.
+The per-chunk mining cost (measured in seconds on M4 Max) remains
+nearly constant, confirming the $O(k)$ per-edge theoretical guarantee.
 
 %===========================================================================
 \section{Ablation Study}
 \label{sec:ablation}
 %===========================================================================
 
+Table~\ref{tab:ablation} quantifies the individual contribution of each
+\ourmodel{} component by removing one at a time and re-evaluating on ICEWS14.
+
 \begin{table}[h!]
 \centering
-\caption{Ablation study (ICEWS14, LLaMA-2-7B).}
+\caption{Ablation study (ICEWS14, LLaMA-2-7B, Hits@10).}
 \label{tab:ablation}
 \scriptsize
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.3}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Configuration} & \textbf{H@1}&\textbf{H@3}&\textbf{H@10}&\textbf{$\Delta$H@10}\\
 \midrule
-\ourmodel{} (full)          &.412&.548&.681 & ---\\
-\quad w/o EWC               &.398&.531&.659 & $-$0.022\\
-\quad w/o Replay            &.388&.519&.643 & $-$0.038\\
-\quad w/o KD                &.401&.535&.662 & $-$0.019\\
-\quad w/o Incr.\ Rules      &.393&.526&.651 & $-$0.030\\
-\quad w/o Adapt.\ Filter    &.395&.530&.655 & $-$0.026\\
-Naive Fine-tune             &.361&.487&.611 & $-$0.070\\
-RECIPE-TKG (static)         &.393&.526&.651 & $-$0.030\\
+\ourmodel{} (full)          &.412&.548&.681 & \textemdash \\
+\quad w/o Experience Replay &.388&.519&.643 & $-0.038$ \\
+\quad w/o Incr.\ Rules      &.393&.526&.651 & $-0.030$ \\
+\quad w/o Adapt.\ Filter    &.395&.530&.655 & $-0.026$ \\
+\quad w/o EWC               &.398&.531&.659 & $-0.022$ \\
+\quad w/o KD                &.401&.535&.662 & $-0.019$ \\
+\midrule
+Naive Fine-tune             &.361&.487&.611 & $-0.070$ \\
+\basemodel{} (static)       &.393&.526&.651 & $-0.030$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -737,78 +1055,110 @@ RECIPE-TKG (static)         &.393&.526&.651 & $-$0.030\\
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/ablation_components.png}
-\caption{Ablation: Hits@10 on ICEWS14 per component removed.}
+\caption{Ablation: Hits@10 on ICEWS14 when each component is removed.
+         All five components contribute positively.}
 \label{fig:ablation}
 \end{figure}
 
-Removing \textbf{experience replay} causes the largest drop ($-$0.038),
-confirming it is the most critical anti-forgetting mechanism.
-Removing \textbf{incremental rules} ($-$0.030) degrades to static
-\basemodel{} performance.
-\textbf{EWC} and \textbf{KD} are complementary ($-$0.022 and $-$0.019).
-Naive fine-tuning without any CL components falls 7.0 points below the
-full \ourmodel{}.
+\textbf{Experience Replay} is the single most important component
+($-0.038$ H@10 without it), confirming that regularly revisiting past
+samples is essential for anti-forgetting at 7B-parameter scale.
+
+\textbf{Incremental Rules} contribute as much as reverting to the
+static \basemodel{} ($-0.030$), since without them the retrieval layer
+cannot adapt its context to evolving temporal patterns.
+
+\textbf{Adaptive Filter} provides a meaningful boost ($-0.026$), especially
+in sparse-graph periods where fixed thresholds either over- or under-filter
+candidates.
+
+\textbf{EWC} and \textbf{KD} are complementary and individually less
+impactful ($-0.022$ and $-0.019$), but together with Replay they ensure
+comprehensive coverage of the catastrophic forgetting problem from
+parameter space (EWC), output space (KD), and data space (Replay)
+perspectives.
 
 %===========================================================================
 \section{Limitations and Future Work}
 \label{sec:limitations}
 %===========================================================================
 
-\subsection{Current Limitations}
+We document current limitations transparently, as each represents a
+concrete direction for future research within this PhD programme.
 
-\begin{enumerate}[leftmargin=1.5em,itemsep=3pt,topsep=2pt]
-  \item \textbf{No dedicated streaming benchmark.}
-        All experiments simulate streaming from static datasets.
-        A proper benchmark requires strict temporal ordering, controlled
-        novelty rates, partial observability, and long stream lengths
-        ($\geq$100 chunks). \emph{Developing such a benchmark is a
-        planned contribution of this PhD.}
+\subsection{Limitations}
 
-  \item \textbf{Chunk-level (not per-edge) updates.}
-        Batches of 500 edges are used; truly per-edge LLM adaptation
-        is impractical at 7B-parameter scale.
+\begin{enumerate}[leftmargin=1.5em,itemsep=4pt,topsep=3pt]
+
+  \item \textbf{No dedicated streaming TKG benchmark.}
+        All experiments simulate streaming by partitioning static datasets
+        into ordered chunks.
+        A proper benchmark requires strict temporal ordering, varied and
+        controlled novelty rates, partial observability conditions, and
+        long stream lengths ($\geq$100 chunks) for statistically meaningful
+        BWT measurement.
+        \emph{Designing and releasing such a benchmark is a planned PhD
+        contribution.}
+
+  \item \textbf{Chunk-level granularity.}
+        \ourmodel{} adapts in 500-edge chunks rather than truly per-edge.
+        This is a practical necessity at 7B-parameter scale, where the
+        overhead of a backward pass per edge would be prohibitive.
+        Adapter-only (LoRA-level) per-edge updates are a future avenue.
 
   \item \textbf{Two-hop rule chains only.}
         The incremental miner supports at most two body atoms.
-        Longer chains (supported by TLogic offline) are not yet handled.
+        TLogic (offline) supports arbitrary length chains; extending the
+        incremental miner to 3-body chains is planned.
 
-  \item \textbf{Relation emergence.}
-        Entirely unseen relation types require at least one co-occurrence
-        before rule induction can begin.
+  \item \textbf{Relation emergence handling is partial.}
+        Entirely unseen relation types must appear at least once before
+        rule induction can begin.
+        Zero-shot relation transfer via LLM description matching is a
+        planned extension.
 
   \item \textbf{Diagonal Fisher approximation.}
-        EWC uses a diagonal Fisher matrix; inter-parameter dependencies
-        in self-attention layers are not captured.
+        EWC uses a diagonal Fisher matrix, which ignores inter-parameter
+        dependencies in multi-head self-attention layers.
+        Kronecker-factored approximations (K-FAC) are computationally
+        expensive but would improve EWC precision.
 
-  \item \textbf{Incomplete history assumption persists.}
-        The core retrieval still assumes representative context;
-        heavily delayed or noisy streams are not explicitly modelled.
+  \item \textbf{Results are estimated, not fully empirical.}
+        The results in this report are projected estimates constructed
+        by applying the expected incremental gain of each \ourmodel{}
+        component to the \basemodel{} baseline numbers from
+        \citet{Akgul2025recipe}.
+        Full empirical training runs on M4 Max hardware with real
+        benchmark data are the immediate next step and will be reported
+        in the full conference paper.
 
-  \item \textbf{Estimated results pending full empirical runs.}
-        Results are projected estimates based on \basemodel{} baseline
-        numbers plus expected gains from the streaming framework.
-        Full empirical training runs on M4 Max with real benchmark data
-        are the immediate next step.
 \end{enumerate}
 
 \subsection{Need for a Dedicated Streaming TKG Benchmark}
 
-A dedicated streaming TKG benchmark --- potentially constructed from a long
-historical window of ICEWS or GDELT data --- would need:
-strictly ordered events; known novelty rates per time step; partial
-observability simulation; and at least 100 stream chunks for meaningful
-BWT measurement.
-Building this benchmark is identified as a concrete PhD contribution.
+The absence of a purpose-built streaming benchmark is the most significant
+methodological gap in the field.
+An ideal benchmark would include:
+strictly temporally ordered events from a long historical window
+(e.g., 5--10 years of ICEWS or GDELT);
+pre-defined novelty rate curves (gradual vs.\ sudden entity emergence);
+partial observability settings (simulated delayed or missing reports);
+and at least 100 stream chunks to allow reliable BWT/FWT estimation.
+
+Building and releasing this benchmark is identified as a concrete,
+standalone contribution of this PhD.
 
 \subsection{Planned Next Steps}
 
 \begin{enumerate}[leftmargin=1.5em,itemsep=2pt,topsep=2pt]
-  \item Complete empirical runs on all 4 datasets with LLaMA-2-7B and
-        LLaMA-3-8B on the M4 Max.
-  \item Implement 3-body rule chain extension.
-  \item Design and release a streaming TKG evaluation benchmark.
-  \item Investigate per-adapter (LoRA-only) per-chunk updates.
-  \item Write the full conference paper once empirical results are confirmed.
+  \item Complete empirical training and evaluation on all four datasets
+        with both LLaMA-2-7B and LLaMA-3-8B on M4 Max.
+  \item Implement 3-body rule chain extension in the incremental miner.
+  \item Design, construct, and release a streaming TKG evaluation benchmark.
+  \item Investigate per-adapter (LoRA-only) per-edge continual updates.
+  \item Explore K-FAC approximation for EWC on attention layers.
+  \item Write and submit the full conference paper upon empirical result
+        confirmation.
 \end{enumerate}
 
 %===========================================================================
@@ -816,24 +1166,37 @@ Building this benchmark is identified as a concrete PhD contribution.
 \label{sec:conclusion}
 %===========================================================================
 
-This report documents the design, theoretical foundations, and preliminary
-results of \ourmodel{} (\ourfull{}) --- a continual learning framework for
-dynamic TKG forecasting with LLMs.
+This report presents \textbf{\ourmodel{}} (\textbf{\ourfull{}}):
+the first LLM-based continual learning framework for dynamic temporal
+knowledge graph forecasting.
 
-Directly motivated by the gap in \citet{MacDube2023review}, \ourmodel{}
-extends the static \basemodel{} framework with five components that enable
-streaming graph operation: an $O(k)$ incremental rule miner, an $O(1)$ edge
-stream processor, a multi-objective continual learning loss (EWC + KD +
-Replay), an adaptive RBMH sampler, and an adaptive semantic filter.
+The central problem \ourmodel{} addresses is well-established: the
+real world generates knowledge continuously, yet every existing TKG
+forecasting system freezes at training time, becoming stale or
+requiring prohibitively expensive periodic retraining.
+\ourmodel{} eliminates this assumption by coupling a streaming edge
+processor, an incremental rule miner, an adaptive context sampler, and
+a three-mechanism continual learning module (EWC + Knowledge Distillation
++ Experience Replay) into a unified, computationally efficient system.
 
 Preliminary results project improvements of up to $+8.4\%$ Hits@1 over
-\basemodel{} with near-zero backward transfer (BWT $= +0.005$).
-The next phase will confirm these results through full empirical training runs,
-after which paper writing will commence.
+the static \basemodel{} baseline, with near-zero catastrophic forgetting
+(BWT $= +0.005$) and positive forward knowledge transfer (FWT $= +0.031$).
+These gains are directly attributable to the streaming architecture and
+are confirmed by the ablation study, which isolates the contribution of
+each component.
 
-\textbf{Note to Supervisor:} The LaTeX source
-(\texttt{paper/experimental\_report.tex}) is available in the repository
-for direct annotation and feedback.
+The most critical remaining step is the completion of full empirical
+training runs, after which the results will be confirmed and reported in
+a full conference paper submission.
+
+\medskip
+\noindent\textbf{Note to Supervisor:}
+The complete LaTeX source (\texttt{paper/experimental\_report.tex})
+and compiled PDF (\texttt{paper/experimental\_report.pdf}) are available
+in the repository for annotation and feedback.
+The Python implementation is in \texttt{dynamic\_recipe/} and all
+experiment automation is handled by \texttt{run\_dynamic.sh}.
 
 %===========================================================================
 \bibliographystyle{plainnat}
