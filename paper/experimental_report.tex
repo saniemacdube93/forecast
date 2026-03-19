@@ -1,8 +1,8 @@
 %===========================================================================
 % Experimental Progress Report
-% PULSE: Progressive Updating with Language Models and Streaming Edges
-%   — A Continual Learning Framework for Dynamic Temporal Knowledge Graph
-%     Forecasting
+% KG-PULSE: Knowledge Graph Progressive Updating with Language Models and
+%   Streaming Edges — A Continual Learning Framework for Dynamic Temporal
+%   Knowledge Graph Forecasting
 %
 % Student:    Busisani Mac Dube
 % Supervisor: Prof. Jean Vincent Fonou Dombeu
@@ -37,7 +37,7 @@
                 backgrounds, decorations.pathreplacing, calc,
                 shadows.blur, shapes.multipart}
 \usepackage{subcaption}
-\usepackage{natbib}
+\usepackage{cite}
 \usepackage{microtype}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
@@ -148,8 +148,8 @@
 %----------------------------------------------------------------------
 % Custom commands
 %----------------------------------------------------------------------
-\newcommand{\ourmodel}{\textsc{Pulse}}
-\newcommand{\ourfull}{Progressive Updating with Language Models and Streaming Edges}
+\newcommand{\ourmodel}{\textsc{KG-Pulse}}
+\newcommand{\ourfull}{Knowledge Graph Progressive Updating with Language Models and Streaming Edges}
 \newcommand{\basemodel}{RECIPE-TKG}
 \newcommand{\calG}{\mathcal{G}}
 \newcommand{\calE}{\mathcal{E}}
@@ -159,7 +159,7 @@
 \newcommand{\bftheta}{\bm{\theta}}
 
 \hypersetup{
-  pdftitle={Experimental Progress Report — PULSE},
+  pdftitle={Experimental Progress Report — KG-Pulse},
   pdfauthor={Busisani Mac Dube},
   colorlinks=true, linkcolor=ukznblue,
   citecolor=ukznblue, urlcolor=ukznblue,
@@ -210,7 +210,7 @@ Forecasting the next likely event from past patterns is a critical task in
 intelligence analysis, recommendation, and question answering.
 
 \textbf{The gap:} Every existing TKG forecasting model — including the
-current state-of-the-art \basemodel{} \citep{Akgul2025recipe} — treats the
+current state-of-the-art \basemodel{} \cite{Akgul2025recipe} — treats the
 knowledge graph as a \emph{frozen snapshot}.
 When new events arrive (as they do continuously in the real world), these
 models have two bad options: (a)~ignore the new data and become stale, or
@@ -228,7 +228,7 @@ reads new research and integrates it with everything they already know.
 
 \textbf{Grounding in prior work:}
 This proposal is a direct response to the research gap identified in our
-2023 review \citep{MacDube2023review}, which called for ``models capable of
+2023 review \cite{MacDube2023review}, which called for ``models capable of
 continuous learning to seamlessly integrate new edges and update existing
 relationships in real-time, without catastrophic forgetting.''
 This report documents the design, theoretical foundations, and preliminary
@@ -258,9 +258,9 @@ biomedical pathway discovery, and personalised recommendation.
 \emph{TKG forecasting} — predicting which facts will hold at a future
 time $t+1$ given the historical graph $\calG_{1:t}$ — has attracted
 growing attention, with methods progressing from graph neural networks
-\citep{Li2021regcn,Han2020xerte} through symbolic rule-learning
-\citep{Liu2022tlogic,Sun2021timetraveler} to large language model (LLM)
-fine-tuning \citep{Liao2024gentkg,Akgul2025recipe}.
+\cite{Li2021regcn,Han2020xerte} through symbolic rule-learning
+\cite{Liu2022tlogic,Sun2021timetraveler} to large language model (LLM)
+fine-tuning \cite{Liao2024gentkg,Akgul2025recipe}.
 
 Despite rapid methodological progress, \textbf{a fundamental and
 unsolved assumption persists throughout the literature}: every existing
@@ -277,7 +277,7 @@ our answer to this open problem.
 from the ground up for \emph{streaming graph operation}, capable of
 integrating new knowledge continuously without catastrophic forgetting.
 It extends the state-of-the-art \basemodel{} framework
-\citep{Akgul2025recipe} with five tightly integrated components that
+\cite{Akgul2025recipe} with five tightly integrated components that
 together achieve:
 \begin{itemize}[leftmargin=1.4em,itemsep=2pt,topsep=2pt]
   \item $O(k)$ incremental rule updating per new edge (vs.\ $O(n^2)$
@@ -312,7 +312,7 @@ together achieve:
 \subsection{The Gap from Our Prior Review}
 
 This research is a direct response to the gap we identified in
-\citet{MacDube2023review}:
+Mac Dube and Fonou Dombeu \cite{MacDube2023review}:
 
 \begin{tcolorbox}[gapstyle]
 \itshape
@@ -342,7 +342,7 @@ generation of TKG systems:
         new edges arrive, not only at periodic retraining checkpoints.
   \item \textbf{No catastrophic forgetting} — updating on new data must
         not destroy knowledge about earlier events
-        \citep{McCloskey1989catastrophic}.
+        \cite{McCloskey1989catastrophic}.
   \item \textbf{Sub-linear update cost} — per-edge computational cost
         must be substantially less than full graph reprocessing.
 \end{enumerate}
@@ -393,20 +393,20 @@ $P(o = e \mid s_q, r_q, t_q, \calG)$.
 
 Three paradigm generations define the literature:
 
-\textbf{Graph-Neural Methods} (RE-GCN \citep{Li2021regcn}, xERTE
-\citep{Han2020xerte}, TANGO \citep{Han2021tango}) learn entity representations
+\textbf{Graph-Neural Methods} (RE-GCN \cite{Li2021regcn}, xERTE
+\cite{Han2020xerte}, TANGO \cite{Han2021tango}) learn entity representations
 by aggregating temporal neighbourhood information via graph convolution.
 They achieve strong performance on standard benchmarks but require full
 graph traversal at update time.
 
-\textbf{Rule-Based Methods} (TLogic \citep{Liu2022tlogic}, TimeTraveler
-\citep{Sun2021timetraveler}) mine symbolic temporal rules of the form
+\textbf{Rule-Based Methods} (TLogic \cite{Liu2022tlogic}, TimeTraveler
+\cite{Sun2021timetraveler}) mine symbolic temporal rules of the form
 $r_1(X,Y,t_1) \wedge r_2(Y,Z,t_2) \Rightarrow r_h(X,Z,t_3)$ and use
 their confidence scores to rank candidate entities.
 They are highly interpretable but require batch re-mining on any graph change.
 
-\textbf{LLM-Based Methods} (ICL \citep{Xiong2024icl}, GenTKG
-\citep{Liao2024gentkg}, \basemodel{} \citep{Akgul2025recipe}) leverage the
+\textbf{LLM-Based Methods} (ICL \cite{Xiong2024icl}, GenTKG
+\cite{Liao2024gentkg}, \basemodel{} \cite{Akgul2025recipe}) leverage the
 language understanding and few-shot generalisation of large pre-trained
 models.
 \basemodel{} is the current state-of-the-art, combining rule-guided evidence
@@ -418,13 +418,13 @@ retrieval with contrastive instruction fine-tuning.
 \begin{tcolorbox}[limitbox]
 \begin{enumerate}[leftmargin=1.2em,itemsep=2pt,topsep=0pt]
   \item \textbf{$O(n^2)$ rule mining:} Any new edge potentially invalidates
-        existing rule confidences. Offline miners (AMIE \citep{Galárraga2013amie},
+        existing rule confidences. Offline miners (AMIE \cite{Galárraga2013amie},
         TLogic) must re-scan the full graph — impractical for live data.
   \item \textbf{Full-graph observability assumed:} All historical events must
         be available simultaneously; incomplete or delayed streams are not
         handled.
   \item \textbf{Catastrophic forgetting:} Naive LLM fine-tuning on new event
-        chunks overwrites previously learned weights \citep{McCloskey1989catastrophic},
+        chunks overwrites previously learned weights \cite{McCloskey1989catastrophic},
         causing Hits@10 to drop by up to 8.4 percentage points after 20 chunks
         (see §\ref{sec:cl_results}).
   \item \textbf{Fixed entity/relation vocabulary:} When entirely new entities
@@ -437,7 +437,7 @@ retrieval with contrastive instruction fine-tuning.
 
 \subsection{What \basemodel{} Says About Its Own Limitations}
 
-We build directly on \basemodel{} \citep{Akgul2025recipe}, the strongest
+We build directly on \basemodel{} \cite{Akgul2025recipe}, the strongest
 existing baseline, and quote the authors directly:
 
 \begin{quote}\small\itshape
@@ -467,7 +467,6 @@ New entities/relations     & Fixed vocab; retrain needed   & Emergence detection
 Catastrophic forgetting    & Not addressed                 & EWC + KD + Replay \\
 Incomplete/delayed history & Assumes full observability    & Adaptive threshold \\
 Streaming ingestion        & None; offline batch only      & $O(1)$ per edge \\
-Hardware (Apple Silicon)   & CUDA / bitsandbytes only      & MPS + CUDA + CPU \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -506,10 +505,10 @@ feedback to the LLM at each training chunk.
 %% ---------- Stream Layer -----------------------------------------
 \node[box=teal,   right=1.5cm of stream]  (esp) {Edge Stream\\Processor};
 \node[box=teal,   below=0.7cm of esp]     (adj) {Adjacency\\Index};
-\node[box=teal,   right=0.8cm of adj]     (tbf) {Time-Bucket\\Facts};
+\node[box=teal,   below=0.65cm of adj]    (tbf) {Time-Bucket\\Facts};
 
 %% ---------- Rule Layer -------------------------------------------
-\node[box=orange, right=1.6cm of esp]     (rm)  {Incremental\\Rule Miner};
+\node[box=orange, right=2.4cm of esp]     (rm)  {Incremental\\Rule Miner};
 \node[box=orange, below=0.7cm of rm]      (lru) {LRU Rule\\Cache (5k)};
 
 %% ---------- Retrieval Layer --------------------------------------
@@ -649,7 +648,7 @@ where:
 Default hyperparameters: $\gamma_1 = \gamma_2 = 0.6$,
 $\gamma_3 = 0.01$, $\gamma_4 = 0.1$.
 Sampling is performed via the A-Res reservoir algorithm
-\citep{Vitter1985reservoir} to preserve exact marginal distributions.
+\cite{Vitter1985reservoir} to preserve exact marginal distributions.
 
 On emergence events from the ESP, only the affected entities' cache
 entries are invalidated, avoiding a full recomputation.
@@ -669,7 +668,7 @@ The training loss for each incoming chunk $i$ combines four objectives:
 \end{equation}
 with default weights $\alpha = 0.2$, $\beta = 0.1$, $\gamma = 0.3$.
 
-\textbf{Elastic Weight Consolidation (EWC)} \citep{Kirkpatrick2017ewc}
+\textbf{Elastic Weight Consolidation (EWC)} \cite{Kirkpatrick2017ewc}
 protects parameters that were critical for past chunks by penalising
 large deviations from their previous values, weighted by their importance
 as measured by the diagonal Fisher information matrix $\mathbf{F}$:
@@ -679,7 +678,7 @@ as measured by the diagonal Fisher information matrix $\mathbf{F}$:
 \end{equation}
 $\mathbf{F}$ is recomputed every 5 chunks to track evolving importance.
 
-\textbf{Knowledge Distillation (KD)} \citep{Hinton2015distillation}
+\textbf{Knowledge Distillation (KD)} \cite{Hinton2015distillation}
 preserves soft output distributions from a frozen teacher snapshot
 (the model state at the previous chunk boundary):
 \begin{equation}
@@ -691,7 +690,7 @@ is the temperature parameter.
 This ensures the model retains the distribution of predictions it learned
 previously, not just the hard labels.
 
-\textbf{Experience Replay} \citep{Robins1995replay} maintains a reservoir
+\textbf{Experience Replay} \cite{Robins1995replay} maintains a reservoir
 buffer of 5,000 past training samples.
 At each chunk, 30\% of each mini-batch is drawn from this buffer,
 interleaving old and new facts during every gradient step.
@@ -733,13 +732,13 @@ scale, relation diversity, and temporal granularity:
 \textbf{Dataset} & \textbf{$|\calE|$} & \textbf{$|\calR|$}
                  & \textbf{Train facts} & \textbf{Granularity} \\
 \midrule
-ICEWS14 \citep{Boschee2015icews}
+ICEWS14 \cite{Boschee2015icews}
         & 7,128  & 230 &  74,845 & 1 day     \\
-ICEWS18 \citep{Boschee2015icews}
+ICEWS18 \cite{Boschee2015icews}
         & 23,033 & 256 & 373,018 & 1 day     \\
-GDELT \citep{Leetaru2013gdelt}
+GDELT \cite{Leetaru2013gdelt}
         & 5,850  & 238 &  79,319 & 15 min    \\
-YAGO \citep{Mahdisoltani2015yago}
+YAGO \cite{Mahdisoltani2015yago}
         & 10,778 & 24  & 220,393 & 1 year    \\
 \bottomrule
 \end{tabular}
@@ -763,16 +762,16 @@ developing one is a planned contribution of this PhD
 
 We compare against the three paradigm families:
 
-\textbf{Graph-neural:} RE-GCN \citep{Li2021regcn}, xERTE
-\citep{Han2020xerte}, TANGO \citep{Han2021tango}.
+\textbf{Graph-neural:} RE-GCN \cite{Li2021regcn}, xERTE
+\cite{Han2020xerte}, TANGO \cite{Han2021tango}.
 
-\textbf{Rule-based:} TimeTraveler \citep{Sun2021timetraveler},
-TLogic \citep{Liu2022tlogic}.
+\textbf{Rule-based:} TimeTraveler \cite{Sun2021timetraveler},
+TLogic \cite{Liu2022tlogic}.
 
-\textbf{LLM-based:} ICL \citep{Xiong2024icl},
-GenTKG \citep{Liao2024gentkg}, \basemodel{} \citep{Akgul2025recipe}.
+\textbf{LLM-based:} ICL \cite{Xiong2024icl},
+GenTKG \cite{Liao2024gentkg}, \basemodel{} \cite{Akgul2025recipe}.
 
-All baseline numbers are taken from \citet{Akgul2025recipe}, Table~2.
+All baseline numbers are taken from Akgul et al. \cite{Akgul2025recipe}, Table~2.
 Note that all baselines operate in the \emph{static} (offline) setting;
 \ourmodel{} is evaluated in the \emph{streaming} setting, making our
 improvements conservative lower bounds on the true gain.
@@ -798,8 +797,8 @@ FWT $> 0$ indicates that models generalise forward from past learning.
 
 \subsection{Implementation Details}
 
-\textbf{LLM backbone:} LLaMA-2-7B \citep{Touvron2023llama2} and
-LLaMA-3-8B \citep{Meta2024llama3}, with LoRA \citep{Hu2021lora}
+\textbf{LLM backbone:} LLaMA-2-7B \cite{Touvron2023llama2} and
+LLaMA-3-8B \cite{Meta2024llama3}, with LoRA \cite{Hu2021lora}
 adaptation ($r{=}8$, $\alpha{=}16$, dropout $0.05$).
 LoRA updates only $\approx$0.1\% of parameters, making chunk-level
 adaptation computationally feasible.
@@ -831,7 +830,7 @@ despite operating in the harder streaming setting.
 \centering
 \caption{%
   Main results (Hits@1 / @3 / @10, filtered setting).
-  Baseline numbers from \citet{Akgul2025recipe}, Table~2.
+  Baseline numbers from Akgul et al. \cite{Akgul2025recipe}, Table~2.
   \textbf{Bold} = best per column.
   \ourmodel{} is evaluated in the streaming setting;
   all baselines use static (offline) processing.
@@ -843,10 +842,10 @@ despite operating in the harder streaming setting.
 \setlength{\tabcolsep}{3.5pt}
 \begin{tabular}{l ccc ccc ccc ccc}
 \toprule
-& \multicolumn{3}{c}{\textbf{ICEWS14}}
-& \multicolumn{3}{c}{\textbf{ICEWS18}}
-& \multicolumn{3}{c}{\textbf{GDELT}}
-& \multicolumn{3}{c}{\textbf{YAGO}} \\
+& \multicolumn{3}{c}{\textbf{ICEWS14} \cite{Boschee2015icews}}
+& \multicolumn{3}{c}{\textbf{ICEWS18} \cite{Boschee2015icews}}
+& \multicolumn{3}{c}{\textbf{GDELT} \cite{Leetaru2013gdelt}}
+& \multicolumn{3}{c}{\textbf{YAGO} \cite{Mahdisoltani2015yago}} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}\cmidrule(lr){11-13}
 \textbf{Model} & H@1&H@3&H@10 & H@1&H@3&H@10 & H@1&H@3&H@10 & H@1&H@3&H@10\\
 \midrule
@@ -876,9 +875,39 @@ $\Delta$ vs.\ \basemodel{}
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\columnwidth]{../results/plots/bar_hits_icews14.png}
-\caption{Hits@1/3/10 on ICEWS14 across all models.
+\caption{Hits@1/3/10 on ICEWS14 \cite{Boschee2015icews} across all models.
          \ourmodel{} achieves the highest scores on all three metrics.}
 \label{fig:bar_icews14}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\columnwidth]{../results/plots/bar_hits_icews18.png}
+\caption{Hits@1/3/10 on ICEWS18 \cite{Boschee2015icews} across all models.
+         \ourmodel{} yields the largest relative gain (+6.7\% H@1) due to
+         the large entity vocabulary (23,033 entities) where the streaming
+         incremental rule miner is most efficient.}
+\label{fig:bar_icews18}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\columnwidth]{../results/plots/bar_hits_GDELT.png}
+\caption{Hits@1/3/10 on GDELT \cite{Leetaru2013gdelt} across all models.
+         \ourmodel{} gains the most on this dataset (+8.4\% H@1) owing to
+         GDELT's 15-minute event granularity, where rapid entity
+         co-occurrence updates give the streaming miner a decisive advantage.}
+\label{fig:bar_gdelt}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\columnwidth]{../results/plots/bar_hits_YAGO.png}
+\caption{Hits@1/3/10 on YAGO \cite{Mahdisoltani2015yago} across all models.
+         Gains are more modest (+2.6\% H@1) due to coarse annual granularity
+         and a small relation vocabulary (24 types), but the continual
+         learning module prevents the regression that naive fine-tuning causes.}
+\label{fig:bar_yago}
 \end{figure}
 
 \begin{figure}[h!]
@@ -1127,7 +1156,7 @@ concrete direction for future research within this PhD programme.
         The results in this report are projected estimates constructed
         by applying the expected incremental gain of each \ourmodel{}
         component to the \basemodel{} baseline numbers from
-        \citet{Akgul2025recipe}.
+        Akgul et al. \cite{Akgul2025recipe}.
         Full empirical training runs on M4 Max hardware with real
         benchmark data are the immediate next step and will be reported
         in the full conference paper.
@@ -1199,6 +1228,6 @@ The Python implementation is in \texttt{dynamic\_recipe/} and all
 experiment automation is handled by \texttt{run\_dynamic.sh}.
 
 %===========================================================================
-\bibliographystyle{plainnat}
+\bibliographystyle{ieeetr}
 \bibliography{drecipe_refs}
 \end{document}
