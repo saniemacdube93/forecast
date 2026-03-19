@@ -1,10 +1,10 @@
 """
-D-RECIPE Visualization Suite.
+KG-PULSE Visualization Suite.
 
 Generates all plots for the PhD paper:
   1.  bar_hits_<dataset>.png         — Hits@1/3/10 vs all baselines per dataset
   2.  hits_over_time.png             — Hits@10 across stream chunks (continual curve)
-  3.  bwt_fwt_comparison.png         — BWT / FWT bar chart (D-RECIPE vs naive)
+  3.  bwt_fwt_comparison.png         — BWT / FWT bar chart (KG-PULSE vs naive)
   4.  heatmap_datasets_metrics.png   — Dataset × Metric performance heatmap
   5.  ablation_components.png        — Ablation study grouped bar chart
   6.  llama2_vs_llama3.png           — LLaMA-2-7B vs LLaMA-3-8B on ICEWS14
@@ -57,7 +57,7 @@ warnings.filterwarnings("ignore")
 # ---------------------------------------------------------------------------
 
 COLORS = {
-    "D-RECIPE"       : "#1f77b4",   # blue
+    "KG-PULSE"       : "#1f77b4",   # blue
     "RECIPE-TKG"     : "#ff7f0e",   # orange
     "GenTKG"         : "#2ca02c",   # green
     "ICL"            : "#d62728",   # red
@@ -121,27 +121,27 @@ BASELINES = {
     },
 }
 
-# D-RECIPE results (mock — estimated ~5-8% gain in dynamic setting)
-DRECIPE_RESULTS = {
+# KG-PULSE results (mock — estimated ~5-8% gain in dynamic setting)
+KGPULSE_RESULTS = {
     "icews14": (0.412, 0.548, 0.681),
     "icews18": (0.239, 0.386, 0.543),
     "GDELT"  : (0.103, 0.207, 0.349),
     "YAGO"   : (0.832, 0.897, 0.945),
 }
 
-# LLaMA-2 vs LLaMA-3 on ICEWS14 (from Table 5 + D-RECIPE extension)
+# LLaMA-2 vs LLaMA-3 on ICEWS14 (from Table 5 + KG-PULSE extension)
 LLAMA_COMPARISON = {
     "ICL"        : {"LLaMA-2-7B": (0.344, 0.464, 0.523),
                     "LLaMA-3-8B": (0.351, 0.484, 0.578)},
     "RECIPE-TKG" : {"LLaMA-2-7B": (0.393, 0.526, 0.651),
                     "LLaMA-3-8B": (0.367, 0.529, 0.658)},
-    "D-RECIPE"   : {"LLaMA-2-7B": (0.412, 0.548, 0.681),
+    "KG-PULSE"   : {"LLaMA-2-7B": (0.412, 0.548, 0.681),
                     "LLaMA-3-8B": (0.419, 0.553, 0.689)},
 }
 
 # Ablation results on ICEWS14
 ABLATION_RESULTS = {
-    "D-RECIPE (full)"       : (0.412, 0.548, 0.681),
+    "KG-PULSE (full)"       : (0.412, 0.548, 0.681),
     "w/o EWC"               : (0.398, 0.531, 0.659),
     "w/o Replay"            : (0.388, 0.519, 0.643),
     "w/o KD"                : (0.401, 0.535, 0.662),
@@ -178,8 +178,8 @@ def plot_bar_hits(dataset: str, output_dir: str,
                   drecipe_results: Optional[Tuple] = None) -> None:
     """Grouped bar chart comparing all models on a single dataset."""
     baselines  = BASELINES[dataset]
-    d_recipe   = drecipe_results or DRECIPE_RESULTS.get(dataset)
-    all_models = list(baselines.keys()) + (["D-RECIPE"] if d_recipe else [])
+    d_recipe   = drecipe_results or KGPULSE_RESULTS.get(dataset)
+    all_models = list(baselines.keys()) + (["KG-PULSE"] if d_recipe else [])
 
     x     = np.arange(len(all_models))
     width = 0.25
@@ -191,14 +191,14 @@ def plot_bar_hits(dataset: str, output_dir: str,
     for i, (metric, midx) in enumerate(zip(metrics, metric_idx)):
         vals = []
         for m in all_models:
-            if m == "D-RECIPE":
+            if m == "KG-PULSE":
                 vals.append(d_recipe[midx])
             else:
                 vals.append(baselines[m][midx])
         bars = ax.bar(x + (i - 1) * width, vals, width,
                       label=metric, color=METRIC_COLORS[i], alpha=0.85)
-        # Annotate D-RECIPE bar
-        d_idx = all_models.index("D-RECIPE") if "D-RECIPE" in all_models else None
+        # Annotate KG-PULSE bar
+        d_idx = all_models.index("KG-PULSE") if "KG-PULSE" in all_models else None
         if d_idx is not None:
             bar = bars[d_idx]
             ax.annotate(f"{vals[d_idx]:.3f}",
@@ -215,9 +215,9 @@ def plot_bar_hits(dataset: str, output_dir: str,
     ax.yaxis.set_minor_locator(mticker.MultipleLocator(0.05))
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
-    # Highlight D-RECIPE
-    if "D-RECIPE" in all_models:
-        d_pos = all_models.index("D-RECIPE")
+    # Highlight KG-PULSE
+    if "KG-PULSE" in all_models:
+        d_pos = all_models.index("KG-PULSE")
         ax.axvspan(d_pos - 0.45, d_pos + 0.45, alpha=0.08, color="#1f77b4",
                    zorder=0, label="_nolegend_")
 
@@ -234,7 +234,7 @@ def plot_hits_over_time(
     output_dir: str = ".",
 ) -> None:
     if per_chunk_metrics is None:
-        # Mock data showing D-RECIPE improvement over time
+        # Mock data showing KG-PULSE improvement over time
         n = 20
         chunks = list(range(2, n * 2 + 1, 2))
         drecipe  = np.clip(0.55 + 0.012 * np.arange(n) + 0.015 * np.random.randn(n), 0, 1)
@@ -250,7 +250,7 @@ def plot_hits_over_time(
 
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(chunks, drecipe, "o-", color="#1f77b4", linewidth=2.5,
-            markersize=5, label="D-RECIPE (continual)")
+            markersize=5, label="KG-PULSE (continual)")
     ax.plot(chunks, naive,   "s--", color="#d62728", linewidth=1.8,
             markersize=4, label="Naive Fine-tune", alpha=0.8)
     ax.plot(chunks, recipe,  "--",  color="#ff7f0e", linewidth=1.5,
@@ -274,8 +274,8 @@ def plot_hits_over_time(
 # ===========================================================================
 
 def plot_bwt_fwt(output_dir: str = ".") -> None:
-    models   = ["D-RECIPE", "Naive Fine-tune", "RECIPE-TKG (static)"]
-    bwt_vals = [0.005, -0.084, 0.0]    # D-RECIPE ≈ 0 (no forgetting)
+    models   = ["KG-PULSE", "Naive Fine-tune", "RECIPE-TKG (static)"]
+    bwt_vals = [0.005, -0.084, 0.0]    # KG-PULSE ≈ 0 (no forgetting)
     fwt_vals = [0.031, 0.009, 0.0]
 
     x     = np.arange(len(models))
@@ -312,14 +312,14 @@ def plot_bwt_fwt(output_dir: str = ".") -> None:
 
 def plot_heatmap(output_dir: str = ".") -> None:
     datasets = ["icews14", "icews18", "GDELT", "YAGO"]
-    models   = ["RE-GCN", "TLogic", "ICL", "GenTKG", "RECIPE-TKG", "D-RECIPE"]
+    models   = ["RE-GCN", "TLogic", "ICL", "GenTKG", "RECIPE-TKG", "KG-PULSE"]
     metric   = "Hits@10"   # index 2
 
     data = np.zeros((len(models), len(datasets)))
     for di, ds in enumerate(datasets):
         for mi, model in enumerate(models):
-            if model == "D-RECIPE":
-                data[mi, di] = DRECIPE_RESULTS[ds][2]
+            if model == "KG-PULSE":
+                data[mi, di] = KGPULSE_RESULTS[ds][2]
             else:
                 data[mi, di] = BASELINES[ds][model][2]
 
@@ -376,13 +376,13 @@ def plot_ablation(output_dir: str = ".") -> None:
     ax.set_xticks(x)
     ax.set_xticklabels(names, rotation=30, ha="right", fontsize=9)
     ax.set_ylabel("Score", fontsize=11)
-    ax.set_title("Ablation Study — Effect of Removing D-RECIPE Components\n"
+    ax.set_title("Ablation Study — Effect of Removing KG-PULSE Components\n"
                  "(ICEWS14, LLaMA-2-7B)", fontsize=12, fontweight="bold")
     ax.legend(fontsize=10)
     ax.set_ylim(0.3, 0.75)
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
-    # Shade D-RECIPE full
+    # Shade KG-PULSE full
     ax.axvspan(-0.5, 0.5, alpha=0.08, color="#1f77b4", zorder=0)
     ax.text(0, 0.72, "★ Full", ha="center", fontsize=8, color="#1f77b4")
 
@@ -432,7 +432,7 @@ def plot_confusion_matrix(output_dir: str = ".") -> None:
     labels = ["Historical\nCorrect", "Historical\nIncorrect",
               "Non-hist.\nCorrect", "Non-hist.\nIncorrect"]
 
-    # Estimated category counts for D-RECIPE vs RECIPE-TKG on ICEWS14
+    # Estimated category counts for KG-PULSE vs RECIPE-TKG on ICEWS14
     recipe_cm  = np.array([[410, 190],   # historical: correct, incorrect
                             [ 25, 375]])  # non-hist  : correct, incorrect
     drecipe_cm = np.array([[430, 170],
@@ -442,7 +442,7 @@ def plot_confusion_matrix(output_dir: str = ".") -> None:
     for ax, cm, title in zip(
         axes,
         [recipe_cm, drecipe_cm],
-        ["RECIPE-TKG", "D-RECIPE"]
+        ["RECIPE-TKG", "KG-PULSE"]
     ):
         if HAS_SEABORN:
             sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax,
@@ -483,7 +483,7 @@ def plot_roc_curve(output_dir: str = ".") -> None:
     scores_correct   = np.clip(rng.normal(0.72, 0.15, n_correct),   0, 1)
     scores_incorrect = np.clip(rng.normal(0.41, 0.18, n_incorrect),  0, 1)
 
-    # Separate D-RECIPE vs RECIPE-TKG ROC
+    # Separate KG-PULSE vs RECIPE-TKG ROC
     def roc_from_scores(sc, si):
         scores  = np.concatenate([sc, si])
         labels  = np.concatenate([np.ones(len(sc)), np.zeros(len(si))])
@@ -511,7 +511,7 @@ def plot_roc_curve(output_dir: str = ".") -> None:
 
     fig, ax = plt.subplots(figsize=(7, 6))
     ax.plot(fpr_d, tpr_d, color="#1f77b4", linewidth=2.5,
-            label=f"D-RECIPE (AUC = {auc_d:.3f})")
+            label=f"KG-PULSE (AUC = {auc_d:.3f})")
     ax.plot(fpr_r, tpr_r, color="#ff7f0e", linewidth=2.0, linestyle="--",
             label=f"RECIPE-TKG (AUC = {auc_r:.3f})")
     ax.plot([0, 1], [0, 1], "k--", linewidth=1.0, alpha=0.5,
@@ -534,7 +534,7 @@ def plot_roc_curve(output_dir: str = ".") -> None:
 
 def plot_semantic_sim_dist(output_dir: str = ".") -> None:
     rng = np.random.default_rng(0)
-    # D-RECIPE: correct predictions have higher sim than RECIPE-TKG
+    # KG-PULSE: correct predictions have higher sim than RECIPE-TKG
     d_correct   = np.clip(rng.normal(0.73, 0.12, 350), 0, 1)
     d_incorrect = np.clip(rng.normal(0.44, 0.16, 650), 0, 1)
     r_correct   = np.clip(rng.normal(0.66, 0.13, 300), 0, 1)
@@ -545,7 +545,7 @@ def plot_semantic_sim_dist(output_dir: str = ".") -> None:
     for ax, (c, ic, title) in zip(
         axes,
         [(r_correct, r_incorrect, "RECIPE-TKG"),
-         (d_correct, d_incorrect, "D-RECIPE")]
+         (d_correct, d_incorrect, "KG-PULSE")]
     ):
         bins = np.linspace(0, 1, 30)
         ax.hist(c,  bins=bins, alpha=0.65, color="#2ca02c", label=f"Correct (n={len(c)})")
@@ -578,7 +578,7 @@ def plot_stream_performance(output_dir: str = ".") -> None:
 
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(n_entities, drecipe, "o-", color="#1f77b4", linewidth=2.5,
-            markersize=6, label="D-RECIPE (continual)")
+            markersize=6, label="KG-PULSE (continual)")
     ax.plot(n_entities, naive,   "s--", color="#d62728", linewidth=1.8,
             markersize=4, label="Naive Fine-tune", alpha=0.8)
     ax.plot(n_entities, recipe_static, "--", color="#ff7f0e", linewidth=1.5,
@@ -622,7 +622,7 @@ def plot_rule_growth(output_dir: str = ".") -> None:
     ax1.grid(linestyle="--", alpha=0.4)
 
     ax2.plot(chunks, mining_cost_s, "o-", color="#1f77b4", linewidth=2.5,
-             markersize=5, label="D-RECIPE (incremental)")
+             markersize=5, label="KG-PULSE (incremental)")
     ax2.plot(chunks, full_mining_s, "s--", color="#d62728", linewidth=1.8,
              markersize=4, label="RECIPE-TKG (full re-mining)", alpha=0.8)
     ax2.set_xlabel("Stream Chunk", fontsize=11)
@@ -644,10 +644,10 @@ def plot_rule_growth(output_dir: str = ".") -> None:
 def plot_main_results_table(output_dir: str = ".") -> None:
     """
     Render the full Hits@1/3/10 comparison table for all 4 datasets as a
-    publication-quality PNG figure (with colour-coded D-RECIPE row).
+    publication-quality PNG figure (with colour-coded KG-PULSE row).
     """
     datasets   = ["icews14", "icews18", "GDELT", "YAGO"]
-    all_models = list(BASELINES["icews14"].keys()) + ["D-RECIPE"]
+    all_models = list(BASELINES["icews14"].keys()) + ["KG-PULSE"]
 
     # Build cell data
     col_labels = (["Model"] +
@@ -660,20 +660,20 @@ def plot_main_results_table(output_dir: str = ".") -> None:
     cell_colors = []
     for model in all_models:
         row = [model]
-        row_colors = ["#f0f0f0" if model != "D-RECIPE" else "#d6eaf8"]
+        row_colors = ["#f0f0f0" if model != "KG-PULSE" else "#d6eaf8"]
         for ds in datasets:
-            if model == "D-RECIPE":
-                vals = DRECIPE_RESULTS[ds]
+            if model == "KG-PULSE":
+                vals = KGPULSE_RESULTS[ds]
             else:
                 vals = BASELINES[ds][model]
-            # Bold D-RECIPE; highlight max per column later
+            # Bold KG-PULSE; highlight max per column later
             for v in vals:
                 row.append(f"{v:.3f}")
-                row_colors.append("#d6eaf8" if model == "D-RECIPE" else "white")
+                row_colors.append("#d6eaf8" if model == "KG-PULSE" else "white")
         cell_text.append(row)
         cell_colors.append(row_colors)
 
-    # Highlight best value (non-D-RECIPE) in light yellow, D-RECIPE in blue
+    # Highlight best value (non-KG-PULSE) in light yellow, KG-PULSE in blue
     n_metric_cols = 12
     for col in range(1, n_metric_cols + 1):
         vals_num = []
@@ -687,7 +687,7 @@ def plot_main_results_table(output_dir: str = ".") -> None:
         best_val, best_row = max(vals_num)
         for v, row_i in vals_num:
             if row_i == best_row:
-                cell_colors[row_i][col] = "#aed6f1" if all_models[row_i] == "D-RECIPE" else "#f9e79f"
+                cell_colors[row_i][col] = "#aed6f1" if all_models[row_i] == "KG-PULSE" else "#f9e79f"
 
     fig, ax = plt.subplots(figsize=(22, 6))
     ax.axis("off")
@@ -714,7 +714,7 @@ def plot_main_results_table(output_dir: str = ".") -> None:
 
     ax.set_title(
         "Table 1 — Main Results: Temporal Link Prediction (Hits@1, Hits@3, Hits@10)\n"
-        "D-RECIPE vs All Baselines across ICEWS14, ICEWS18, GDELT, YAGO",
+        "KG-PULSE vs All Baselines across ICEWS14, ICEWS18, GDELT, YAGO",
         fontsize=11, fontweight="bold", pad=12,
     )
     fig.tight_layout()
@@ -726,7 +726,7 @@ def plot_continual_metrics_table(output_dir: str = ".") -> None:
     """
     Render BWT / FWT / AvgAcc comparison table as a PNG.
     """
-    models = ["Naive Fine-tune", "RECIPE-TKG (static)", "D-RECIPE"]
+    models = ["Naive Fine-tune", "RECIPE-TKG (static)", "KG-PULSE"]
     avgs   = [0.583,  0.651,  0.672]
     bwts   = [-0.084, 0.000,  0.005]
     fwts   = [0.009,  0.000,  0.031]
@@ -736,7 +736,7 @@ def plot_continual_metrics_table(output_dir: str = ".") -> None:
     cell_colors = []
     for i, m in enumerate(models):
         row = [m, f"{avgs[i]:.3f}", f"{bwts[i]:+.3f}", f"{fwts[i]:+.3f}"]
-        bg  = "#d6eaf8" if m == "D-RECIPE" else "white"
+        bg  = "#d6eaf8" if m == "KG-PULSE" else "white"
         cell_text.append(row)
         cell_colors.append([bg] * 4)
 
@@ -773,16 +773,16 @@ def plot_ablation_table(output_dir: str = ".") -> None:
     """Ablation study results as a PNG table."""
     models  = list(ABLATION_RESULTS.keys())
     col_labels = ["Configuration", "Hits@1", "Hits@3", "Hits@10", "Δ H@10 vs full"]
-    full_h10 = ABLATION_RESULTS["D-RECIPE (full)"][2]
+    full_h10 = ABLATION_RESULTS["KG-PULSE (full)"][2]
 
     cell_text   = []
     cell_colors = []
     for m in models:
         h1, h3, h10 = ABLATION_RESULTS[m]
         delta = h10 - full_h10
-        delta_str = f"{delta:+.3f}" if m != "D-RECIPE (full)" else "—"
+        delta_str = f"{delta:+.3f}" if m != "KG-PULSE (full)" else "—"
         row = [m, f"{h1:.3f}", f"{h3:.3f}", f"{h10:.3f}", delta_str]
-        bg  = "#d6eaf8" if m == "D-RECIPE (full)" else (
+        bg  = "#d6eaf8" if m == "KG-PULSE (full)" else (
               "#fde8d8" if delta < 0 else "white")
         cell_text.append(row)
         cell_colors.append([bg] * 5)
@@ -808,7 +808,7 @@ def plot_ablation_table(output_dir: str = ".") -> None:
 
     ax.set_title(
         "Table 3 — Ablation Study (ICEWS14, LLaMA-2-7B)\n"
-        "Effect of removing individual D-RECIPE components",
+        "Effect of removing individual KG-PULSE components",
         fontsize=10, fontweight="bold", pad=10,
     )
     fig.tight_layout()
@@ -822,11 +822,11 @@ def plot_llama_comparison_table(output_dir: str = ".") -> None:
                   "LLaMA-3-8B\nH@1", "LLaMA-3-8B\nH@3", "LLaMA-3-8B\nH@10"]
     cell_text   = []
     cell_colors = []
-    for m in ["ICL", "RECIPE-TKG", "D-RECIPE"]:
+    for m in ["ICL", "RECIPE-TKG", "KG-PULSE"]:
         l2 = LLAMA_COMPARISON[m]["LLaMA-2-7B"]
         l3 = LLAMA_COMPARISON[m]["LLaMA-3-8B"]
         row = [m] + [f"{v:.3f}" for v in l2] + [f"{v:.3f}" for v in l3]
-        bg  = "#d6eaf8" if m == "D-RECIPE" else "white"
+        bg  = "#d6eaf8" if m == "KG-PULSE" else "white"
         cell_text.append(row)
         cell_colors.append([bg] * 7)
 
@@ -871,17 +871,17 @@ def print_comparison_table(output_dir: str = ".") -> None:
     rows.append(sub)
     rows.append("-" * len(sub))
 
-    all_models = list(BASELINES["icews14"].keys()) + ["D-RECIPE"]
+    all_models = list(BASELINES["icews14"].keys()) + ["KG-PULSE"]
     for model in all_models:
         line = f"{model:<18}"
         for ds in ["icews14", "icews18", "GDELT", "YAGO"]:
-            if model == "D-RECIPE":
-                h1, h3, h10 = DRECIPE_RESULTS[ds]
+            if model == "KG-PULSE":
+                h1, h3, h10 = KGPULSE_RESULTS[ds]
             else:
                 h1, h3, h10 = BASELINES[ds][model]
             line += f" {h1:>7.3f} {h3:>7.3f} {h10:>10.3f}"
-        if model == "D-RECIPE":
-            line += "  ← D-RECIPE"
+        if model == "KG-PULSE":
+            line += "  ← KG-PULSE"
         rows.append(line)
 
     table_str = "\n".join(rows)
@@ -899,7 +899,7 @@ def print_comparison_table(output_dir: str = ".") -> None:
 # ===========================================================================
 
 def parse_args():
-    p = argparse.ArgumentParser(description="D-RECIPE Visualization Suite")
+    p = argparse.ArgumentParser(description="KG-PULSE Visualization Suite")
     p.add_argument("--results_file", type=str, default="",
                    help="Path to metrics.json from dynamic_main.py")
     p.add_argument("--output_dir",   type=str, default="./results/plots",
@@ -917,7 +917,7 @@ def main():
     outdir = args.output_dir
     os.makedirs(outdir, exist_ok=True)
 
-    print(f"\nGenerating D-RECIPE plots → {outdir}/")
+    print(f"\nGenerating KG-PULSE plots → {outdir}/")
 
     # Load real metrics if provided
     per_chunk = None
@@ -925,14 +925,14 @@ def main():
         with open(args.results_file) as f:
             data = json.load(f)
         per_chunk = data.get("per_chunk", None)
-        # Update D-RECIPE results from actual run
+        # Update KG-PULSE results from actual run
         final = data.get("final", {})
         if final:
             ds = data.get("config", {}).get("DATASET", "icews14")
-            DRECIPE_RESULTS[ds] = (
-                final.get("Hits@1", DRECIPE_RESULTS[ds][0]),
-                final.get("Hits@3", DRECIPE_RESULTS[ds][1]),
-                final.get("Hits@10", DRECIPE_RESULTS[ds][2]),
+            KGPULSE_RESULTS[ds] = (
+                final.get("Hits@1", KGPULSE_RESULTS[ds][0]),
+                final.get("Hits@3", KGPULSE_RESULTS[ds][1]),
+                final.get("Hits@10", KGPULSE_RESULTS[ds][2]),
             )
         print(f"  Loaded real results from: {args.results_file}")
 
