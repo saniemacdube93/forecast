@@ -56,21 +56,29 @@ class EWCRegularizer:
         model: nn.Module,
         dataloader: DataLoader,
         device: torch.device,
-        n_batches: int = 50,
+        n_batches: int = 20,
     ) -> None:
         """
         Estimate diagonal Fisher information matrix over *trainable* params
         using n_batches mini-batches from dataloader.
 
         F_i ≈ E[(∂ log p(y|x) / ∂θ_i)²]
+
+        Accumulators and the final fisher/theta_star dicts are always stored
+        on CPU.  This prevents a second full copy of LoRA weights from sitting
+        in MPS memory, which was the main cause of OOM on M-series Macs.
+        ewc_loss() already calls .to(param.device) before computing the
+        penalty, so the on-CPU storage is transparent to the rest of training.
         """
         model.eval()
         fisher: Dict[str, torch.Tensor] = {}
 
-        # Initialise accumulators
+        # Initialise accumulators on CPU to avoid pinning extra tensors on MPS
         for name, param in model.named_parameters():
             if param.requires_grad:
-                fisher[name] = torch.zeros_like(param.data, device=device)
+                fisher[name] = torch.zeros(
+                    param.data.shape, dtype=param.data.dtype, device="cpu"
+                )
 
         n_processed = 0
         for batch_idx, batch in enumerate(dataloader):
@@ -92,19 +100,20 @@ class EWCRegularizer:
 
             for name, param in model.named_parameters():
                 if param.requires_grad and param.grad is not None:
-                    fisher[name] += param.grad.detach() ** 2
+                    # Move grad to CPU before squaring so MPS peak stays low
+                    fisher[name] += param.grad.detach().cpu() ** 2
 
             n_processed += 1
 
-        # Normalise
+        # Normalise (all on CPU)
         if n_processed > 0:
             for name in fisher:
                 fisher[name] /= n_processed
 
-        # Save reference parameters (θ*)
+        # Save reference parameters (θ*) on CPU
         self.fisher    = fisher
         self.theta_star = {
-            name: param.data.detach().clone()
+            name: param.data.detach().clone().cpu()
             for name, param in model.named_parameters()
             if param.requires_grad
         }
@@ -158,8 +167,13 @@ class KnowledgeDistiller:
         self.teacher: Optional[nn.Module] = None
 
     def snapshot(self, model: nn.Module) -> None:
-        """Freeze a copy of the current model as the teacher."""
-        self.teacher = copy.deepcopy(model)
+        """Freeze a CPU copy of the current model as the teacher.
+
+        Keeping the teacher on CPU avoids doubling MPS memory (~14 GB for
+        LLaMA-2-7B BF16).  distillation_loss() already routes inputs to
+        whichever device the teacher lives on, so no other changes are needed.
+        """
+        self.teacher = copy.deepcopy(model).cpu()
         self.teacher.eval()
         for p in self.teacher.parameters():
             p.requires_grad = False
@@ -222,16 +236,18 @@ class ContinualTrainer:
         alpha_contrastive: float = 0.2,
         replay_ratio: float = 0.3,
         fisher_update_freq: int = 5,   # update Fisher every N chunks
+        fisher_n_batches: int = 20,    # mini-batches per Fisher estimate
         device: Optional[torch.device] = None,
     ):
-        self.ewc         = ewc_regularizer
-        self.distiller   = distiller
-        self.buffer      = replay_buffer
-        self.alpha_cont  = alpha_contrastive
-        self.replay_ratio = replay_ratio
-        self.fisher_freq = fisher_update_freq
-        self.device      = device or get_device()
-        self._chunk_idx  = 0
+        self.ewc              = ewc_regularizer
+        self.distiller        = distiller
+        self.buffer           = replay_buffer
+        self.alpha_cont       = alpha_contrastive
+        self.replay_ratio     = replay_ratio
+        self.fisher_freq      = fisher_update_freq
+        self.fisher_n_batches = fisher_n_batches
+        self.device           = device or get_device()
+        self._chunk_idx       = 0
 
     # ------------------------------------------------------------------
     def train_on_chunk(
@@ -336,8 +352,9 @@ class ContinualTrainer:
         # Update Fisher periodically
         self._chunk_idx += 1
         if self._chunk_idx % self.fisher_freq == 0 and len(loader) > 0:
-            self.ewc.compute_fisher(model, loader, self.device)
-            self.distiller.snapshot(model)   # refresh teacher
+            self.ewc.compute_fisher(model, loader, self.device,
+                                    n_batches=self.fisher_n_batches)
+            self.distiller.snapshot(model)   # refresh teacher (stored on CPU)
 
         empty_cache(self.device)
 
@@ -355,8 +372,9 @@ class ContinualTrainer:
         Call once after initial (pre-stream) training to capture the Fisher
         matrix and take the first teacher snapshot.
         """
-        self.ewc.compute_fisher(model, seed_dataloader, self.device)
-        self.distiller.snapshot(model)
+        self.ewc.compute_fisher(model, seed_dataloader, self.device,
+                                n_batches=self.fisher_n_batches)
+        self.distiller.snapshot(model)   # stored on CPU
 
 
 # ---------------------------------------------------------------------------

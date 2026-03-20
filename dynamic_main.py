@@ -237,6 +237,7 @@ def main():
         alpha_contrastive=args.CONTRASTIVE_WEIGHT,
         replay_ratio=args.REPLAY_RATIO if args.USE_REPLAY else 0.0,
         fisher_update_freq=args.FISHER_UPDATE_FREQ,
+        fisher_n_batches=args.FISHER_N_BATCHES,
         device=device,
     )
 

@@ -55,6 +55,9 @@ def parse_args():
                         help="Replay buffer capacity (reservoir sampling)")
     parser.add_argument("--FISHER_UPDATE_FREQ", type=int, default=5,
                         help="Update Fisher matrix every N stream chunks")
+    parser.add_argument("--FISHER_N_BATCHES",   type=int, default=20,
+                        help="Mini-batches used to estimate Fisher (fewer = less MPS memory; "
+                             "original paper used 50, 20 is a good MPS-safe default)")
     parser.add_argument("--USE_EWC",         type=int,   default=1,
                         help="Enable EWC regularisation (0=off)")
     parser.add_argument("--USE_REPLAY",      type=int,   default=1,
