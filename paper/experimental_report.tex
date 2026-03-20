@@ -57,6 +57,9 @@
 \definecolor{naivered}{RGB}{180,30,30}
 \definecolor{recipeorange}{RGB}{220,100,10}
 \definecolor{gapbox}{RGB}{255,245,235}
+\definecolor{leftbg}{HTML}{d7e9cd}
+\definecolor{leftnode}{HTML}{84bd96}
+\definecolor{midright}{HTML}{fbf2cf}
 \definecolor{gapborder}{RGB}{180,80,0}
 \definecolor{supervisorbox}{RGB}{240,248,255}
 \definecolor{supervisorborder}{RGB}{0,83,155}
@@ -490,10 +493,10 @@ feedback to the LLM at each training chunk.
 \begin{tikzpicture}[
   font=\small, >=Stealth,
   %% Entity nodes — teal shades only (Panel 1)
-  ent/.style={circle,draw=teal!85,fill=teal!25,minimum size=9pt,inner sep=0pt,thick},
-  enp/.style={circle,draw=teal!60,fill=teal!15,minimum size=9pt,inner sep=0pt,thick},
-  eno/.style={circle,draw=teal!40,fill=teal!8, minimum size=9pt,inner sep=0pt,thick},
-  env/.style={circle,draw=teal!70,fill=teal!18,minimum size=9pt,inner sep=0pt,thick},
+  ent/.style={circle,draw=black!60,fill=leftnode,minimum size=9pt,inner sep=0pt,thick},
+  enp/.style={circle,draw=black!50,fill=leftnode,minimum size=9pt,inner sep=0pt,thick},
+  eno/.style={circle,draw=black!40,fill=leftnode,minimum size=9pt,inner sep=0pt,thick},
+  env/.style={circle,draw=black!55,fill=leftnode,minimum size=9pt,inner sep=0pt,thick},
   %% White formula box (all panels)
   fbox/.style={draw=gray!50,fill=white,rounded corners=4pt,inner sep=5pt,
                align=center,font=\scriptsize},
@@ -503,16 +506,16 @@ feedback to the LLM at each training chunk.
   %% Panel 3 — violet component boxes
   p3box/.style={draw=violet!65,fill=violet!10,rounded corners=5pt,thick,
                 minimum width=3.6cm,minimum height=0.58cm,align=center,font=\scriptsize},
-  arr/.style={->,thick,draw=gray!60},
+  arr/.style={->,thick,draw=black},
   bigarr/.style={->,line width=2.5pt,draw=green!50!black},
 ]
 
 %%=================================================================
 %% PANEL 1 — EDGE STREAM PROCESSING  (teal)
 %%=================================================================
-\node[draw=teal!55,fill=teal!4,dashed,very thick,rounded corners=10pt,
+\node[draw=leftnode!70,fill=leftbg,dashed,very thick,rounded corners=10pt,
       minimum width=6.0cm,minimum height=9.2cm] at (3.0,-4.6) {};
-\node[fill=teal!65,text=white,font=\bfseries\small,inner sep=0,
+\node[fill=leftnode,text=black,font=\bfseries\small,inner sep=0,
       minimum width=5.65cm,minimum height=0.68cm,rounded corners=5pt,align=center]
   at (3.0,-0.34) {\strut Edge Stream Processing};
 
@@ -520,21 +523,21 @@ feedback to the LLM at each training chunk.
 \node[ent] (a1) at (0.55,-1.50) {};
 \node[ent] (a2) at (1.15,-1.10) {};
 \node[enp] (a3) at (1.45,-1.90) {};
-\draw[->,teal!70,thick](a1)--(a2); \draw[->,teal!70,thick](a2)--(a3);
+\draw[->,black,thick](a1)--(a2); \draw[->,black,thick](a2)--(a3);
 \node[font=\tiny\itshape,gray!80] at (1.0,-2.25) {Snapshot $t{-}1$};
 
-\node[font=\large\bfseries,teal!65] at (2.0,-1.60) {$\boldsymbol{\gg}$};
+\node[font=\large\bfseries,black!70] at (2.0,-1.60) {$\boldsymbol{\gg}$};
 
 %% Snapshot t
 \node[ent] (b1) at (2.60,-1.50) {};
 \node[ent] (b2) at (3.20,-1.10) {};
 \node[enp] (b3) at (3.50,-1.90) {};
 \node[eno] (b4) at (2.90,-2.05) {};
-\draw[->,teal!70,thick](b1)--(b2); \draw[->,teal!70,thick](b2)--(b3);
-\draw[->,teal!45,dashed,thick](b1)--(b4);
+\draw[->,black,thick](b1)--(b2); \draw[->,black,thick](b2)--(b3);
+\draw[->,black!70,dashed,thick](b1)--(b4);
 \node[font=\tiny\itshape,gray!80] at (3.05,-2.55) {Snapshot $t$};
 
-\node[font=\large\bfseries,teal!65] at (4.05,-1.60) {$\boldsymbol{\gg}$};
+\node[font=\large\bfseries,black!70] at (4.05,-1.60) {$\boldsymbol{\gg}$};
 
 %% Snapshot t+1
 \node[ent] (c1) at (4.65,-1.50) {};
@@ -542,9 +545,9 @@ feedback to the LLM at each training chunk.
 \node[enp] (c3) at (5.40,-1.95) {};
 \node[eno] (c4) at (4.90,-2.10) {};
 \node[env] (c5) at (5.35,-2.60) {};
-\draw[->,teal!70,thick](c1)--(c2); \draw[->,teal!70,thick](c2)--(c3);
-\draw[->,teal!45,dashed,thick](c1)--(c4);
-\draw[->,teal!30,dashed,thick](c4)--(c5);
+\draw[->,black,thick](c1)--(c2); \draw[->,black,thick](c2)--(c3);
+\draw[->,black!70,dashed,thick](c1)--(c4);
+\draw[->,black!50,dashed,thick](c4)--(c5);
 \node[font=\tiny\itshape,gray!80] at (5.00,-3.00) {Snapshot $t{+}1$};
 \node[gray!65,font=\small] at (5.90,-1.70) {\ldots};
 
@@ -552,19 +555,19 @@ feedback to the LLM at each training chunk.
 \draw[arr] (3.0,-3.25) -- (3.0,-3.65);
 
 %% Adjacency Index bars
-\fill[teal!68] (1.10,-3.75) rectangle (4.90,-4.12);
-\fill[teal!44] (1.10,-4.17) rectangle (4.90,-4.54);
-\fill[teal!20] (1.10,-4.59) rectangle (4.90,-4.96);
+\fill[leftnode] (1.10,-3.75) rectangle (4.90,-4.12);
+\fill[leftnode!75] (1.10,-4.17) rectangle (4.90,-4.54);
+\fill[leftnode!45] (1.10,-4.59) rectangle (4.90,-4.96);
 \node[font=\tiny\bfseries,white]         at (3.0,-3.94) {$\mathrm{adj}_{\mathrm{out}}[s]\mathrel{+}=(r,o,t)$};
 \node[font=\tiny\bfseries,white]         at (3.0,-4.36) {$\mathrm{adj}_{\mathrm{in}}[o]\mathrel{+}=(r,s,t)$};
-\node[font=\tiny\bfseries,white!75!teal] at (3.0,-4.78) {$\mathcal{B}[t]\mathrel{+}=(s,r,o,t)$};
-\node[font=\scriptsize\itshape,teal!80]  at (3.0,-5.25) {$O(1)$ amortised insert per edge};
+\node[font=\tiny\bfseries,black] at (3.0,-4.78) {$\mathcal{B}[t]\mathrel{+}=(s,r,o,t)$};
+\node[font=\scriptsize\itshape,black!70]  at (3.0,-5.25) {$O(1)$ amortised insert per edge};
 
 %% Emergence Detection (teal)
 \draw[arr] (3.0,-5.45) -- (3.0,-5.70);
-\node[draw=teal!65,fill=teal!8,rounded corners=5pt,thick,
+\node[draw=leftnode,fill=leftbg,rounded corners=5pt,thick,
       minimum width=4.6cm,minimum height=0.62cm,
-      font=\scriptsize\bfseries,align=center] at (3.0,-6.00)
+      font=\scriptsize\bfseries,align=center,text=black] at (3.0,-6.00)
   {Emergence Detection};
 \node[font=\tiny\itshape,gray!75,align=center] at (3.0,-6.62)
   {New entity / relation $\Rightarrow$\\selective cache invalidation};
@@ -577,7 +580,7 @@ feedback to the LLM at each training chunk.
 %%=================================================================
 %% PANEL 2 — RULE MINING + CONTINUAL LEARNING  (blue)
 %%=================================================================
-\node[draw=blue!50,fill=blue!3,dashed,very thick,rounded corners=10pt,
+\node[draw=blue!50,fill=midright,dashed,very thick,rounded corners=10pt,
       minimum width=6.2cm,minimum height=9.2cm] at (9.90,-4.6) {};
 \node[fill=blue!65,text=white,font=\bfseries\small,inner sep=0,
       minimum width=5.80cm,minimum height=0.68cm,rounded corners=5pt,align=center]
@@ -640,7 +643,7 @@ feedback to the LLM at each training chunk.
 %%=================================================================
 %% PANEL 3 — ADAPTIVE RETRIEVAL & LLM PREDICTION  (violet)
 %%=================================================================
-\node[draw=violet!55,fill=violet!4,dashed,very thick,rounded corners=10pt,
+\node[draw=violet!55,fill=midright,dashed,very thick,rounded corners=10pt,
       minimum width=6.2cm,minimum height=9.2cm] at (16.60,-4.6) {};
 \node[fill=violet!65,text=white,font=\bfseries\small,inner sep=0,
       minimum width=5.80cm,minimum height=0.68cm,rounded corners=5pt,align=center]
