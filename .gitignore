@@ -1,0 +1,31 @@
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model outputs & results
+output_model/
+results/
+*.pt
+*.bin
+*.safetensors
+
+# Logs
+*.log
+
+# OS
+.DS_Store
