@@ -489,31 +489,26 @@ feedback to the LLM at each training chunk.
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
   font=\small, >=Stealth,
-  %% TKG entity node styles (one per colour)
+  %% Entity nodes — teal shades only (Panel 1)
   ent/.style={circle,draw=teal!85,fill=teal!25,minimum size=9pt,inner sep=0pt,thick},
-  enp/.style={circle,draw=pink!85,fill=pink!25,minimum size=9pt,inner sep=0pt,thick},
-  eno/.style={circle,draw=orange!85,fill=orange!25,minimum size=9pt,inner sep=0pt,thick},
-  env/.style={circle,draw=violet!85,fill=violet!25,minimum size=9pt,inner sep=0pt,thick},
-  %% Generic boxes
-  fbox/.style={draw=gray!55,fill=white,rounded corners=4pt,inner sep=5pt,
+  enp/.style={circle,draw=teal!60,fill=teal!15,minimum size=9pt,inner sep=0pt,thick},
+  eno/.style={circle,draw=teal!40,fill=teal!8, minimum size=9pt,inner sep=0pt,thick},
+  env/.style={circle,draw=teal!70,fill=teal!18,minimum size=9pt,inner sep=0pt,thick},
+  %% White formula box (all panels)
+  fbox/.style={draw=gray!50,fill=white,rounded corners=4pt,inner sep=5pt,
                align=center,font=\scriptsize},
-  %% Component boxes (colour hard-coded per use)
-  cboxV/.style={draw=violet!70,fill=violet!12,rounded corners=5pt,thick,
-                minimum width=3.6cm,minimum height=0.60cm,align=center,font=\scriptsize},
-  cboxO/.style={draw=orange!70,fill=orange!12,rounded corners=5pt,thick,
-                minimum width=3.6cm,minimum height=0.60cm,align=center,font=\scriptsize},
-  lboxO/.style={draw=orange!65,fill=orange!10,rounded corners=4pt,thick,
-                minimum width=3.5cm,minimum height=0.55cm,align=center,font=\scriptsize},
-  lboxB/.style={draw=blue!65,fill=blue!10,rounded corners=4pt,thick,
-                minimum width=3.5cm,minimum height=0.55cm,align=center,font=\scriptsize},
-  lboxT/.style={draw=teal!65,fill=teal!10,rounded corners=4pt,thick,
-                minimum width=3.5cm,minimum height=0.55cm,align=center,font=\scriptsize},
-  arr/.style={->,thick,draw=gray!65},
+  %% Panel 2 — blue component boxes
+  p2box/.style={draw=blue!65,fill=blue!10,rounded corners=5pt,thick,
+                minimum width=3.6cm,minimum height=0.58cm,align=center,font=\scriptsize},
+  %% Panel 3 — violet component boxes
+  p3box/.style={draw=violet!65,fill=violet!10,rounded corners=5pt,thick,
+                minimum width=3.6cm,minimum height=0.58cm,align=center,font=\scriptsize},
+  arr/.style={->,thick,draw=gray!60},
   bigarr/.style={->,line width=2.5pt,draw=green!50!black},
 ]
 
 %%=================================================================
-%% PANEL 1 — EDGE STREAM PROCESSING  (left, teal)
+%% PANEL 1 — EDGE STREAM PROCESSING  (teal)
 %%=================================================================
 \node[draw=teal!55,fill=teal!4,dashed,very thick,rounded corners=10pt,
       minimum width=6.0cm,minimum height=9.2cm] at (3.0,-4.6) {};
@@ -521,218 +516,178 @@ feedback to the LLM at each training chunk.
       minimum width=5.65cm,minimum height=0.68cm,rounded corners=5pt,align=center]
   at (3.0,-0.34) {\strut Edge Stream Processing};
 
-%% — Snapshot t-1
+%% Snapshot t-1
 \node[ent] (a1) at (0.55,-1.50) {};
 \node[ent] (a2) at (1.15,-1.10) {};
 \node[enp] (a3) at (1.45,-1.90) {};
 \draw[->,teal!70,thick](a1)--(a2); \draw[->,teal!70,thick](a2)--(a3);
 \node[font=\tiny\itshape,gray!80] at (1.0,-2.25) {Snapshot $t{-}1$};
 
-\node[font=\large\bfseries,green!55!black] at (2.0,-1.60) {$\boldsymbol{\gg}$};
+\node[font=\large\bfseries,teal!65] at (2.0,-1.60) {$\boldsymbol{\gg}$};
 
-%% — Snapshot t  (new orange entity appears)
+%% Snapshot t
 \node[ent] (b1) at (2.60,-1.50) {};
 \node[ent] (b2) at (3.20,-1.10) {};
 \node[enp] (b3) at (3.50,-1.90) {};
 \node[eno] (b4) at (2.90,-2.05) {};
 \draw[->,teal!70,thick](b1)--(b2); \draw[->,teal!70,thick](b2)--(b3);
-\draw[->,orange!70,dashed,thick](b1)--(b4);
+\draw[->,teal!45,dashed,thick](b1)--(b4);
 \node[font=\tiny\itshape,gray!80] at (3.05,-2.55) {Snapshot $t$};
 
-\node[font=\large\bfseries,green!55!black] at (4.05,-1.60) {$\boldsymbol{\gg}$};
+\node[font=\large\bfseries,teal!65] at (4.05,-1.60) {$\boldsymbol{\gg}$};
 
-%% — Snapshot t+1  (violet entity emerges)
+%% Snapshot t+1
 \node[ent] (c1) at (4.65,-1.50) {};
 \node[ent] (c2) at (5.25,-1.10) {};
 \node[enp] (c3) at (5.40,-1.95) {};
 \node[eno] (c4) at (4.90,-2.10) {};
 \node[env] (c5) at (5.35,-2.60) {};
 \draw[->,teal!70,thick](c1)--(c2); \draw[->,teal!70,thick](c2)--(c3);
-\draw[->,orange!70,dashed,thick](c1)--(c4);
-\draw[->,violet!70,dashed,thick](c4)--(c5);
+\draw[->,teal!45,dashed,thick](c1)--(c4);
+\draw[->,teal!30,dashed,thick](c4)--(c5);
 \node[font=\tiny\itshape,gray!80] at (5.00,-3.00) {Snapshot $t{+}1$};
 \node[gray!65,font=\small] at (5.90,-1.70) {\ldots};
 
 %% Down arrow
 \draw[arr] (3.0,-3.25) -- (3.0,-3.65);
 
-%% — Adjacency Index: three stacked coloured bars (like BAKE embeddings)
+%% Adjacency Index bars
 \fill[teal!68] (1.10,-3.75) rectangle (4.90,-4.12);
 \fill[teal!44] (1.10,-4.17) rectangle (4.90,-4.54);
 \fill[teal!20] (1.10,-4.59) rectangle (4.90,-4.96);
-\node[font=\tiny\bfseries,white]          at (3.0,-3.94) {$\mathrm{adj}_{\mathrm{out}}[s]\mathrel{+}=(r,o,t)$};
-\node[font=\tiny\bfseries,white]          at (3.0,-4.36) {$\mathrm{adj}_{\mathrm{in}}[o]\mathrel{+}=(r,s,t)$};
-\node[font=\tiny\bfseries,white!75!teal]  at (3.0,-4.78) {$\mathcal{B}[t]\mathrel{+}=(s,r,o,t)$};
-\node[font=\scriptsize\itshape,teal!80]   at (3.0,-5.25) {$O(1)$ amortised insert per edge};
+\node[font=\tiny\bfseries,white]         at (3.0,-3.94) {$\mathrm{adj}_{\mathrm{out}}[s]\mathrel{+}=(r,o,t)$};
+\node[font=\tiny\bfseries,white]         at (3.0,-4.36) {$\mathrm{adj}_{\mathrm{in}}[o]\mathrel{+}=(r,s,t)$};
+\node[font=\tiny\bfseries,white!75!teal] at (3.0,-4.78) {$\mathcal{B}[t]\mathrel{+}=(s,r,o,t)$};
+\node[font=\scriptsize\itshape,teal!80]  at (3.0,-5.25) {$O(1)$ amortised insert per edge};
 
-%% — Emergence detection
-\draw[arr] (3.0,-5.10) -- (3.0,-5.65);
-\node[draw=orange!65,fill=orange!8,rounded corners=5pt,thick,
+%% Emergence Detection (teal)
+\draw[arr] (3.0,-5.45) -- (3.0,-5.70);
+\node[draw=teal!65,fill=teal!8,rounded corners=5pt,thick,
       minimum width=4.6cm,minimum height=0.62cm,
-      font=\scriptsize\bfseries,align=center] at (3.0,-5.95)
+      font=\scriptsize\bfseries,align=center] at (3.0,-6.00)
   {Emergence Detection};
-\node[font=\tiny\itshape,gray!75,align=center] at (3.0,-6.60)
-  {New entity $\,/\,$ relation $\Rightarrow$\\selective cache invalidation};
+\node[font=\tiny\itshape,gray!75,align=center] at (3.0,-6.62)
+  {New entity / relation $\Rightarrow$\\selective cache invalidation};
 
-%% — Time-bucket snapshot formula
-\draw[arr] (3.0,-7.05) -- (3.0,-7.35);
-\node[fbox,minimum width=4.5cm] at (3.0,-7.80)
+%% Time-bucket formula
+\draw[arr] (3.0,-7.05) -- (3.0,-7.33);
+\node[fbox,minimum width=4.5cm] at (3.0,-7.78)
   {$\mathcal{B}[t_1{:}t_2]$ query in $O(|t_2{-}t_1|)$ — no full scan};
 
 %%=================================================================
-%% PANEL 2 — RULE MINING (top) + CONTINUAL LEARNING (bottom)
+%% PANEL 2 — RULE MINING + CONTINUAL LEARNING  (blue)
 %%=================================================================
 \node[draw=blue!50,fill=blue!3,dashed,very thick,rounded corners=10pt,
       minimum width=6.2cm,minimum height=9.2cm] at (9.90,-4.6) {};
+\node[fill=blue!65,text=white,font=\bfseries\small,inner sep=0,
+      minimum width=5.80cm,minimum height=0.68cm,rounded corners=5pt,align=center]
+  at (9.90,-0.34) {\strut Rule Mining \& Continual Learning};
 
-%% — Upper sub-panel: Incremental Rule Mining (orange)
-\node[draw=orange!55,fill=orange!4,rounded corners=8pt,thick,
-      minimum width=5.80cm,minimum height=4.05cm] at (9.90,-2.35) {};
-\node[fill=orange!65,text=white,font=\bfseries\small,inner sep=0,
-      minimum width=5.65cm,minimum height=0.68cm,rounded corners=5pt,align=center]
-  at (9.90,-0.34) {\strut Incremental Rule Mining};
+%% Section label — Incremental Rule Mining
+\node[font=\scriptsize\bfseries,blue!75] at (9.90,-1.05)
+  {\textsc{Incremental Rule Mining}};
 
-\node[fbox] at (9.90,-1.30)
-  {$r_1(X,Y,t_1)\;\wedge\;r_2(Y,Z,t_2)\;\Rightarrow\;r_h(X,Z,t_3)$};
-\draw[arr] (9.90,-1.75) -- (9.90,-2.00);
-\node[fbox] at (9.90,-2.45)
+\node[fbox] at (9.90,-1.58)
+  {$r_1(X,Y)\wedge r_2(Y,Z)\Rightarrow r_h(X,Z,t)$};
+\draw[arr] (9.90,-1.95) -- (9.90,-2.20);
+\node[fbox] at (9.90,-2.68)
   {$\mathrm{conf}(\pi)\;\leftarrow\;
     \dfrac{\mathrm{count}_+(\pi)}{\mathrm{count}_\mathrm{body}(\pi)}$
    \enspace updated per edge};
-\draw[arr] (9.90,-3.00) -- (9.90,-3.15);
+\draw[arr] (9.90,-3.22) -- (9.90,-3.45);
 
-%% O(k) vs O(n²)
-\node[draw=green!60!black,fill=green!8,rounded corners=3pt,thick,
-      minimum width=2.0cm,minimum height=0.55cm,
-      font=\scriptsize\bfseries,text=green!50!black,align=center]
-  at (8.90,-3.40) {$O(k)$ / edge};
-\node[font=\footnotesize,gray!80] at (9.90,-3.40) {\textbf{vs.}};
-\node[draw=red!55,fill=red!8,rounded corners=3pt,thick,
-      minimum width=2.0cm,minimum height=0.55cm,
-      font=\scriptsize,text=red!70,align=center]
-  at (10.90,-3.40) {$O(n^2)$ offline};
+%% O(k) vs O(n^2) — both in blue
+\node[p2box,minimum width=1.80cm] at (8.85,-3.72) {$O(k)$/edge};
+\node[font=\footnotesize,gray!65] at (9.90,-3.72) {\textbf{vs.}};
+\node[p2box,minimum width=1.80cm] at (10.95,-3.72) {$O(n^2)$ offline};
+\draw[arr] (9.90,-4.01) -- (9.90,-4.23);
 
-%% LRU cache
-\draw[arr] (9.90,-3.65) -- (9.90,-3.88);
-\node[cboxO] at (9.90,-4.13) {\bfseries LRU Rule Cache\enspace(5{,}000 rules)};
+%% LRU Cache — blue
+\node[p2box,minimum width=4.0cm] at (9.90,-4.52)
+  {\bfseries LRU Rule Cache\enspace(5{,}000 rules)};
 
-%% — Lower sub-panel: Continual Learning (red)
-\node[draw=red!50,fill=red!3,rounded corners=8pt,thick,
-      minimum width=5.80cm,minimum height=4.38cm] at (9.90,-6.96) {};
-\node[fill=red!65,text=white,font=\bfseries\small,inner sep=0,
-      minimum width=5.65cm,minimum height=0.68cm,rounded corners=5pt,align=center]
-  at (9.90,-4.70) {\strut Continual Learning Module};
+%% Divider between sections
+\draw[blue!30,thick] (7.05,-4.90) -- (12.75,-4.90);
 
-\node[fbox] at (9.90,-5.52)
-  {$\mathcal{L}_i
-    =\mathcal{L}_\mathrm{CE}
+%% Section label — Continual Learning
+\node[font=\scriptsize\bfseries,blue!75] at (9.90,-5.15)
+  {\textsc{Continual Learning Module}};
+
+\node[fbox] at (9.90,-5.70)
+  {$\mathcal{L}_i=\mathcal{L}_\mathrm{CE}
     +\alpha\,\mathcal{L}_C
     +\beta\,\mathcal{L}_\mathrm{EWC}
     +\gamma\,\mathcal{L}_\mathrm{KD}$};
-\draw[arr] (9.90,-5.92) -- (9.90,-6.13);
+\draw[arr] (9.90,-6.10) -- (9.90,-6.33);
 
-%% Stacked loss component boxes (like BAKE: box + box + box → big loss)
-\node[lboxO] at (9.15,-6.55) {\bfseries EWC Regulariser};
-\node[font=\small,gray!80] at (9.90,-6.55) {\textbf{+}};
-\node[lboxB] at (9.15,-7.15) {\bfseries Knowledge Distillation};
-\node[font=\small,gray!80] at (9.90,-7.15) {\textbf{+}};
-\node[lboxT] at (9.15,-7.75) {\bfseries Experience Replay};
+%% Stacked loss boxes — all blue (p2box)
+\node[p2box] at (9.15,-6.60) {\bfseries EWC Regulariser};
+\node[font=\small,blue!55] at (9.90,-6.98) {\textbf{+}};
+\node[p2box] at (9.15,-7.28) {\bfseries Knowledge Distillation};
+\node[font=\small,blue!55] at (9.90,-7.66) {\textbf{+}};
+\node[p2box] at (9.15,-7.96) {\bfseries Experience Replay};
 
-%% Big green arrow → CL Loss box
-\draw[bigarr] (10.80,-7.15) -- (11.30,-7.15);
-\node[draw=red!65,fill=red!18,rounded corners=6pt,very thick,
-      minimum width=1.60cm,minimum height=1.80cm,
-      font=\small\bfseries,align=center,text=red!80]
-  at (11.82,-7.15) {\bfseries CL\\Loss};
+%% Arrow right → CL Loss
+\draw[bigarr] (10.80,-7.28) -- (11.18,-7.28);
+\node[draw=blue!70,fill=blue!15,rounded corners=6pt,very thick,
+      minimum width=1.45cm,minimum height=1.95cm,
+      font=\small\bfseries,align=center,text=blue!80]
+  at (11.82,-7.28) {\bfseries CL\\Loss};
 
 \node[font=\tiny\itshape,gray!70,align=center] at (9.90,-8.72)
-  {$\mathbf{F}$ (Fisher) updated every 5 chunks $\cdot$
-   $\tau{=}2.0$ $\cdot$ 30\,\% replay};
+  {$\mathbf{F}$ updated every 5 chunks $\cdot$ $\tau{=}2.0$ $\cdot$ 30\% replay};
 
 %%=================================================================
-%% PANEL 3 — ADAPTIVE RETRIEVAL & LLM PREDICTION  (right, warm)
+%% PANEL 3 — ADAPTIVE RETRIEVAL & LLM PREDICTION  (violet)
 %%=================================================================
-\node[draw=yellow!65!brown,fill=yellow!4,dashed,very thick,rounded corners=10pt,
+\node[draw=violet!55,fill=violet!4,dashed,very thick,rounded corners=10pt,
       minimum width=6.2cm,minimum height=9.2cm] at (16.60,-4.6) {};
-\node[fill=yellow!55!brown,text=white,font=\bfseries\small,inner sep=0,
+\node[fill=violet!65,text=white,font=\bfseries\small,inner sep=0,
       minimum width=5.80cm,minimum height=0.68cm,rounded corners=5pt,align=center]
   at (16.60,-0.34) {\strut Adaptive Retrieval \& LLM Prediction};
 
 %% RBMH weight formula
 \node[fbox] at (16.60,-1.35)
   {$w(f)=w_n(f)\cdot w_f(f)\cdot\bigl[w_t(f)+w_c(f)+w_{cp}(f)\bigr]$};
-\draw[arr] (16.60,-1.82) -- (16.60,-2.08);
+\draw[arr] (16.60,-1.78) -- (16.60,-2.03);
 
-%% Sampler boxes
-\node[cboxV] at (16.60,-2.35) {\bfseries Adaptive RBMH Sampler};
-\draw[arr] (16.60,-2.67) -- (16.60,-2.92);
-\node[cboxV] at (16.60,-3.20) {A-Res Reservoir Sampling};
-\draw[arr] (16.60,-3.52) -- (16.60,-3.77);
+%% Sampler boxes (violet)
+\node[p3box] at (16.60,-2.31) {\bfseries Adaptive RBMH Sampler};
+\draw[arr] (16.60,-2.60) -- (16.60,-2.85);
+\node[p3box] at (16.60,-3.13) {A-Res Reservoir Sampling};
+\draw[arr] (16.60,-3.42) -- (16.60,-3.65);
 
-%% LLaMA + LoRA block with schematic neural-net circles
-\node[draw=blue!60,fill=blue!8,rounded corners=7pt,very thick,
-      minimum width=5.70cm,minimum height=2.20cm] at (16.60,-4.75) {};
-\node[font=\small\bfseries,blue!80] at (16.60,-4.00) {LLaMA-2/3 + LoRA};
-
-%% — three input columns + two output columns of dots
-\foreach \x in {14.65,15.10,15.55} {
-  \foreach \y in {-4.55,-4.88,-5.22} {
-    \node[circle,fill=blue!40,minimum size=5pt,inner sep=0] at (\x,\y) {};}}
-\foreach \x in {17.65,18.10} {
-  \foreach \y in {-4.55,-4.88,-5.22} {
-    \node[circle,fill=blue!65,minimum size=5pt,inner sep=0] at (\x,\y) {};}}
-\foreach \xl in {14.65,15.10,15.55} {
-  \foreach \xr in {17.65,18.10} {
-    \draw[blue!20,thin] (\xl,-4.55)--(\xr,-4.55);
-    \draw[blue!20,thin] (\xl,-4.88)--(\xr,-4.88);
-    \draw[blue!20,thin] (\xl,-5.22)--(\xr,-5.22);}}
-\node[font=\tiny,gray!70,align=center] at (16.60,-5.52)
+%% LLaMA + LoRA block (violet, no clutter)
+\node[draw=violet!60,fill=violet!8,rounded corners=7pt,very thick,
+      minimum width=5.70cm,minimum height=1.90cm] at (16.60,-4.60) {};
+\node[font=\small\bfseries,violet!90] at (16.60,-3.88) {LLaMA-2/3 + LoRA};
+\node[font=\tiny,gray!65,align=center] at (16.60,-4.90)
   {$r{=}8,\;\alpha{=}16,\;\approx\!0.1\%$ trainable params};
 
-%% Query input arrow from left side
-\node[draw=gray!55,fill=gray!8,rounded corners=3pt,
-      font=\tiny\bfseries,align=center,
-      minimum width=1.85cm,minimum height=0.60cm]
-  at (13.62,-4.75) {Query\\$(s_q,r_q,?,t_q)$};
-\draw[bigarr] (14.38,-4.75) -- (14.58,-4.75);
+\draw[arr] (16.60,-5.55) -- (16.60,-5.78);
 
-\draw[arr] (16.60,-5.90) -- (16.60,-6.15);
+%% Score & Rank (violet)
+\node[p3box,minimum width=4.6cm] at (16.60,-6.06)
+  {\bfseries Score $f(s,r,o)$ \& Rank};
+\draw[arr] (16.60,-6.35) -- (16.60,-6.60);
 
-%% Score and Prediction boxes at same level
-\node[draw=yellow!65!brown,fill=yellow!12,rounded corners=4pt,thick,
-      minimum width=2.10cm,minimum height=0.58cm,font=\scriptsize\bfseries]
-  at (15.50,-6.43) {Score $f(s,r,o)$};
-\draw[bigarr] (16.35,-6.43) -- (16.90,-6.43);
-\node[draw=yellow!65!brown,fill=yellow!18,rounded corners=4pt,thick,
-      minimum width=2.10cm,minimum height=0.58cm,font=\scriptsize\bfseries]
-  at (17.70,-6.43) {Prediction};
-
-\draw[arr] (16.60,-6.73) -- (16.60,-6.95);
-
-%% Adaptive semantic filter
-\node[draw=gray!55,fill=gray!8,rounded corners=4pt,thick,
-      minimum width=5.50cm,minimum height=0.60cm,font=\scriptsize]
-  at (16.60,-7.23)
+%% Semantic filter (violet)
+\node[p3box,minimum width=4.6cm] at (16.60,-6.88)
   {Semantic Filter:\enspace $\tau_{t+1}=\tau_t+\eta_\tau(\pi^*-\pi_t)$};
+\draw[arr] (16.60,-7.17) -- (16.60,-7.42);
 
-\draw[arr] (16.60,-7.55) -- (16.60,-7.80);
+%% Fan arrows to Hits@k (violet)
+\draw[->,thick,violet!70] (16.60,-7.42) -| (14.85,-7.68);
+\draw[->,thick,violet!70] (16.60,-7.42) -- (16.60,-7.68);
+\draw[->,thick,violet!70] (16.60,-7.42) -| (18.35,-7.68);
+\node[p3box,minimum width=1.38cm,minimum height=0.52cm,font=\tiny\bfseries]
+  at (14.85,-7.96) {Hits@1};
+\node[p3box,minimum width=1.38cm,minimum height=0.52cm,font=\tiny\bfseries]
+  at (16.60,-7.96) {Hits@3};
+\node[p3box,minimum width=1.38cm,minimum height=0.52cm,font=\tiny\bfseries]
+  at (18.35,-7.96) {Hits@10};
 
-%% Output metric boxes  (Hits@1 / @3 / @10)
-\node[draw=green!60!black,fill=green!10,rounded corners=4pt,thick,
-      minimum width=1.38cm,minimum height=0.54cm,
-      font=\tiny\bfseries,text=green!45!black] at (14.85,-8.20) {Hits@1};
-\node[draw=green!60!black,fill=green!10,rounded corners=4pt,thick,
-      minimum width=1.38cm,minimum height=0.54cm,
-      font=\tiny\bfseries,text=green!45!black] at (16.60,-8.20) {Hits@3};
-\node[draw=green!60!black,fill=green!10,rounded corners=4pt,thick,
-      minimum width=1.38cm,minimum height=0.54cm,
-      font=\tiny\bfseries,text=green!45!black] at (18.35,-8.20) {Hits@10};
-
-\draw[->,thick,green!55!black] (16.60,-7.80) -| (14.85,-7.97);
-\draw[->,thick,green!55!black] (16.60,-7.80) -- (16.60,-7.97);
-\draw[->,thick,green!55!black] (16.60,-7.80) -| (18.35,-7.97);
-
-\node[font=\tiny\itshape,gray!70,align=center] at (16.60,-8.82)
+\node[font=\tiny\itshape,gray!70,align=center] at (16.60,-8.65)
   {BWT\,$=+0.005$ \quad$\vert$\quad FWT\,$=+0.031$};
 
 %%=================================================================
@@ -740,8 +695,8 @@ feedback to the LLM at each training chunk.
 %%=================================================================
 \draw[bigarr,line width=3pt] (6.25,-4.60) -- (6.75,-4.60);
 \node[font=\tiny\itshape,gray!80,above] at (6.50,-4.55) {edges};
-\draw[bigarr,line width=3pt] (13.15,-4.60) -- (13.55,-4.60);
-\node[font=\tiny\itshape,gray!80,above] at (13.35,-4.55) {context};
+\draw[bigarr,line width=3pt] (13.15,-4.60) -- (13.75,-4.60);
+\node[font=\tiny\itshape,gray!80,above] at (13.45,-4.55) {context};
 
 \end{tikzpicture}%
 }
